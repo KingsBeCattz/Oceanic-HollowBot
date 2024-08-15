@@ -47,12 +47,23 @@ export default new Command(
 			| 'unknown'
 			| 'error' = 'unknown';
 
+		const code = ctx.get('code', ctx.args?.join(' '))?.split(' ') || [];
+		const flag = code.shift();
+
+		if (
+			flag &&
+			(!flag?.startsWith('--') || !['--sync', '--async'].includes(flag))
+		)
+			code.unshift(flag);
+
 		try {
 			// biome-ignore lint/security/noGlobalEval: The use is protected by conditionals
 			eval_ = await eval(
-				`(async () => {
-				${await transpiler.transform(ctx.get('code', ctx.args?.join(' ')) as string)}
+				(flag ?? '--sync') === '--async'
+					? `(async () => {
+				${await transpiler.transform(code.join(' '))}
 				})()`
+					: await transpiler.transform(code.join(' '))
 			);
 
 			type = Array.isArray(eval_) ? 'array' : typeof eval_;
