@@ -11,7 +11,7 @@ export default new Command(
 	[],
 	[],
 	async (ctx) => {
-		ctx.send({
+		await ctx.send({
 			content:
 				'Restarting...\n-# When I start back I will send notice on this same channel.'
 		});
