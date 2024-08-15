@@ -23,7 +23,7 @@ export class EventManager extends Collection<
 				continue;
 			}
 
-			delete require.cache[require(module)];
+			delete require.cache[require(module).default];
 			const event: MaybeArray<Event<keyof ClientEvents>> = require(module).default;
 
 			if (Array.isArray(event))

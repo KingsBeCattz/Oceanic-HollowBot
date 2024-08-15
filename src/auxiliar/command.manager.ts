@@ -16,7 +16,7 @@ export class CommandManager extends Collection<string, Command> {
 				continue;
 			}
 
-			delete require.cache[require(module)];
+			delete require.cache[require(module).default];
 			const command: MaybeArray<Command> = require(module).default;
 
 			if (Array.isArray(command))
