@@ -97,4 +97,11 @@ export class Util {
 			})) as { items: APIEmoji[] }
 		).items;
 	}
+
+	public format(type: 'number', value: number) {
+		switch (type) {
+			case 'number':
+				return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		}
+	}
 }

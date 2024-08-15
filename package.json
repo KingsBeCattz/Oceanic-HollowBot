@@ -12,5 +12,6 @@
         "oceanic.js": "^1.11.1",
         "sourcebin": "^5.0.0",
         "unzipper": "^0.12.3"
-    }
+    },
+    "version": "1.0.0-beta"
 }

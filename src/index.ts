@@ -8,6 +8,10 @@ String.prototype.capitalize = function (): string {
 	return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
+Number.prototype.format = function (): string {
+	return String(this).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
 export const client = new Client({
 	auth: `Bot ${process.env.TOKEN}`,
 	gateway: {

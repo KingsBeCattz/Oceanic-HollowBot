@@ -55,6 +55,10 @@ declare global {
 	interface String {
 		capitalize(): string;
 	}
+
+	interface Number {
+		format(): string;
+	}
 }
 
 export type {};
