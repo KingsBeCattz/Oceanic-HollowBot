@@ -1,4 +1,4 @@
-import { CommandInteraction } from 'oceanic.js';
+import { CommandInteraction, Message } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command(
@@ -46,6 +46,8 @@ export default new Command(
 			'message',
 			ctx.args?.join(' ') || 'Se le olvido el mensaje!'
 		);
+
+		if (ctx.data instanceof Message && anonym) ctx.data.delete();
 
 		if (ctx.data instanceof CommandInteraction)
 			ctx.send({
