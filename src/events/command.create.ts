@@ -30,7 +30,7 @@ export default [
 		try {
 			const ctx = new Context(client, message, util, command, db, args);
 
-			if (await command.check(ctx)) return;
+			if ((await command.perms(ctx)).some((v) => !v)) return;
 
 			command.code(ctx);
 		} catch (e) {
@@ -45,7 +45,7 @@ export default [
 		try {
 			const ctx = new Context(client, interaction, util, command, db);
 
-			if (await command.check(ctx)) return;
+			if ((await command.perms(ctx)).some((v) => !v)) return;
 
 			command.code(ctx);
 		} catch (e) {
