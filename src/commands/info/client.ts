@@ -19,12 +19,8 @@ export default new Command(
 			embeds: [
 				{
 					title: bot.user.username,
+					description: `**Version**: ${packagejson.version}\n**Runtime**: Bun@${Bun.version}\n**Language**: TypeScript\n**Library**: Oceanic.JS@${VERSION}\n**Developer**: <@${owner.user.id}>`,
 					fields: [
-						{
-							name: '** **',
-							value: `Version: ${packagejson.version}\nRuntime: Bun@${Bun.version}\nLanguage: TypeScript\nLibrary: Oceanic.JS@${VERSION}\nDeveloper: <@${owner.user.id}>`,
-							inline: true
-						},
 						{
 							name: 'Stats',
 							value: `Servers: ${ctx.client.guilds.size.format()}\nUsers: ${ctx.client.guilds
