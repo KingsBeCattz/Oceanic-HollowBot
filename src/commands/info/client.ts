@@ -39,7 +39,7 @@ export default new Command(
 						url: `https://cdn.discordapp.com/avatars/${bot.user.id}/${bot.user.avatar}.png`
 					},
 					image: {
-						url: `https://cdn.discordapp.com/banners/${bot.user.id}/${bot.user.banner}.gif`
+						url: `https://cdn.discordapp.com/banners/${bot.user.id}/${bot.user.banner}.gif?size=2048`
 					}
 				}
 			]
