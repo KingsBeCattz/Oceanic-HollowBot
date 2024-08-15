@@ -8,6 +8,7 @@ export default new Command(
 		nsfw: false
 	},
 	[],
+	[],
 	[
 		{
 			type: 1,
@@ -36,7 +37,15 @@ export default new Command(
 	async (ctx) => {
 		const action = ctx.subcommand(ctx.args?.shift() || 'get')?.toLowerCase();
 
+		const check_permission = () =>
+			ctx.send({
+				content:
+					'You need the `Manage guild` permission.\n-# If you have the `Administrator` permission you should be able to, if you have the permission and you cannot use this command login to the support server to report the problem.',
+				flags: 64
+			});
+
 		const reset = () => {
+			if (!ctx.member?.permissions.has(32n)) return check_permission();
 			ctx.db.delete('guilds', `${ctx.guild?.id}.prefix`);
 
 			ctx.send({
@@ -46,6 +55,8 @@ export default new Command(
 
 		switch (action) {
 			case 'set': {
+				if (!ctx.member?.permissions.has(32n)) return check_permission();
+
 				const prefix = ctx.get('prefix', ctx.args?.shift())?.toLowerCase();
 				if (!prefix)
 					return ctx.send({

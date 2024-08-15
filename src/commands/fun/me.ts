@@ -9,6 +9,7 @@ export default new Command(
 		nsfw: false
 	},
 	[],
+	[],
 	[
 		{
 			type: 5,

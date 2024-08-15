@@ -11,6 +11,7 @@ export default new Command(
 	},
 	[],
 	[],
+	[],
 	async (ctx) => {
 		const bot = await ctx.profile(ctx.client.user.id);
 		const owner = await ctx.profile('1125490330679115847');

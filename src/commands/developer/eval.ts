@@ -16,6 +16,7 @@ export default new Command(
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
+	['developer'],
 	[
 		async (ctx) =>
 			(
@@ -49,7 +50,9 @@ export default new Command(
 		try {
 			// biome-ignore lint/security/noGlobalEval: The use is protected by conditionals
 			eval_ = await eval(
-				await transpiler.transform(ctx.get('code', ctx.args?.join(' ')) as string)
+				`(async () => {
+				${await transpiler.transform(ctx.get('code', ctx.args?.join(' ')) as string)}
+				})()`
 			);
 
 			type = Array.isArray(eval_) ? 'array' : typeof eval_;

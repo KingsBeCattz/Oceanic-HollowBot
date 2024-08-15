@@ -7,12 +7,8 @@ export default new Command(
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
-	[
-		async (ctx) =>
-			(
-				(await ctx.db.get('users', `${ctx.user.id}.permissions`)) as string[]
-			)?.includes('developer') ?? false
-	],
+	['developer'],
+	[],
 	[],
 	async (ctx) => {
 		const time = Date.now();

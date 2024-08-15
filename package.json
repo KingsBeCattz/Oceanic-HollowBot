@@ -8,6 +8,7 @@
         "archiver": "^7.0.1",
         "discord-api-types": "0.37.93",
         "discord-arts": "^0.6.1",
+        "discord.js": "^14.15.3",
         "lodash": "^4.17.21",
         "oceanic.js": "^1.11.1",
         "sourcebin": "^5.0.0",

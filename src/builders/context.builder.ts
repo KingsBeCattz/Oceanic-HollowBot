@@ -39,11 +39,7 @@ export class Context {
 	}
 
 	get member() {
-		return this.data instanceof Message
-			? this.data.member
-				? this.data.guild?.getMember(this.data.member.id)
-				: null
-			: this.data.member;
+		return this.data.member ?? null;
 	}
 
 	get timestamp() {

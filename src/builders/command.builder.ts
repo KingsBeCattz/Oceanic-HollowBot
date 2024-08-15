@@ -21,6 +21,7 @@ export class Command {
 			type: CommandTypes;
 			nsfw: boolean;
 		},
+		public permissions: string[],
 		public conditions: Condition[],
 		public options: ApplicationCommandOptions[],
 		public code: (ctx: Context) => MaybePromise<unknown>
@@ -30,6 +31,15 @@ export class Command {
 		return await Promise.all(this.conditions.map(async (c) => await c(ctx))).then(
 			(a) => a.some((v) => !v)
 		);
+	}
+
+	public async perms(ctx: Context) {
+		const permissions = (((await ctx.db.get(
+			'users',
+			`${ctx.user.id}.permissions`
+		)) as unknown) || []) as string[];
+
+		return this.permissions.map((p) => permissions.includes(p));
 	}
 
 	public transform(): CreateChatInputApplicationCommandOptions {
