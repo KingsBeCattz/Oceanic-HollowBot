@@ -9,7 +9,8 @@ export type Condition = (ctx: Context) => MaybePromise<boolean>;
 export enum CommandTypes {
 	Developer = 'Developer',
 	Fun = 'Fun',
-	Configuration = 'Configuration'
+	Configuration = 'Configuration',
+	Information = 'Information'
 }
 
 export class Command {

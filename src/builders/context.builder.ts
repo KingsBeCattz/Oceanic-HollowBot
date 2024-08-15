@@ -88,6 +88,8 @@ export class Context {
 		return (await this.data.createFollowup(data)).message;
 	}
 
+	public get<T>(name: string): T;
+	public get<T>(name: string, defaultValue: T): T;
 	public get<T>(name: string, defaultValue?: T): T | undefined {
 		if (this.data instanceof Message) return defaultValue;
 
@@ -101,23 +103,15 @@ export class Context {
 
 		switch (option.type) {
 			case 6:
-				return (options.getUser(option.name, false) ?? defaultValue) as
-					| T
-					| undefined;
+				return (options.getUser(option.name, false) ?? defaultValue) as T;
 			case 7:
-				return (options.getChannel(option.name, false) ?? defaultValue) as
-					| T
-					| undefined;
+				return (options.getChannel(option.name, false) ?? defaultValue) as T;
 			case 8:
-				return (options.getRole(option.name, false) ?? defaultValue) as
-					| T
-					| undefined;
+				return (options.getRole(option.name, false) ?? defaultValue) as T;
 			case 11:
-				return (options.getAttachment(option.name, false) ?? defaultValue) as
-					| T
-					| undefined;
+				return (options.getAttachment(option.name, false) ?? defaultValue) as T;
 			default:
-				return (option.value ?? defaultValue) as T | undefined;
+				return (option.value ?? defaultValue) as T;
 		}
 	}
 

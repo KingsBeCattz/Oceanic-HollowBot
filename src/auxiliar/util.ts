@@ -126,4 +126,26 @@ export class Util {
 	public badgets(flags: bigint): string[] {
 		return Object.keys(badgets).filter((k) => (flags & badgets[k]) !== 0n);
 	}
+
+	public random(max: number, min = 0, decimals = 0): number {
+		if (!max) return 0;
+		if (
+			max === 0 ||
+			max === min ||
+			typeof max !== 'number' ||
+			typeof min !== 'number'
+		)
+			return 0;
+		const random = Math.random() * (max - min) + min;
+		return Number(random.toFixed(decimals));
+	}
+
+	public defaultAvatar(user: {
+		global_name: string | null;
+		id: string;
+		discriminator: string;
+	}) {
+		if (user.global_name) return Number((BigInt(user.id) >> 22n) % 6n);
+		return Number(user.discriminator) % 5;
+	}
 }

@@ -103,7 +103,7 @@ export class Database extends TypedEmitter<Events> {
 		});
 
 		try {
-			archive.pipe(createWriteStream(backup));
+			archive.pipe(createWriteStream(backup) as unknown as NodeJS.WritableStream);
 
 			for (const table of readdirSync(tables))
 				archive.file(join(tables, table), { name: table });
@@ -150,7 +150,9 @@ export class Database extends TypedEmitter<Events> {
 				file
 					.stream()
 					.pipe(
-						createWriteStream(join(process.cwd(), this.path, 'tables', file.path))
+						createWriteStream(
+							join(process.cwd(), this.path, 'tables', file.path)
+						) as unknown as NodeJS.WritableStream
 					);
 			}
 

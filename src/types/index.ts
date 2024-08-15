@@ -59,6 +59,10 @@ declare global {
 	interface Number {
 		format(): string;
 	}
+
+	interface Array<T> {
+		format(separators: { comma: string; and: string }): string;
+	}
 }
 
 export type {};
