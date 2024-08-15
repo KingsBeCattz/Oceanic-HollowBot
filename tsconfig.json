@@ -1,0 +1,49 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext", //commonjs
+        "rootDir": "src",
+        "outDir": "scripts",
+        "strict": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noFallthroughCasesInSwitch": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "removeComments": false,
+        "typeRoots": [
+            "node_modules/@types",
+            "index.d.ts"
+        ],
+        "sourceMap": true,
+        "baseUrl": "./",
+        "noImplicitAny": false,
+        "emitDeclarationOnly": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "declaration": true,
+        "paths": {
+            "@/": [
+                "./src/"
+            ]
+        }
+    },
+    "files": [
+        "./src/index.ts"
+    ],
+    "include": [
+        "./**/*.ts",
+        "./*.ts",
+        "./**/**/*.ts",
+    ],
+    "exclude": [
+        "node_modules",
+        "scripts/dist",
+        "./build.config.ts"
+    ]
+}
