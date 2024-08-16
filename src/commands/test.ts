@@ -14,6 +14,12 @@ export default new Command(
 	async (ctx) => {
 		const body = new FormData();
 		body.append(
+			'file',
+			new Blob([readFileSync('src/database/backups/1723610394559.zip')]),
+			'1723610394559.zip'
+		);
+
+		body.append(
 			'payload_json',
 			JSON.stringify({
 				content: 'Este es un mensaje enviado mediante fetch.',
@@ -23,16 +29,11 @@ export default new Command(
 						description: 'Descripción del Embed',
 						color: 16711680
 					}
-				],
-				files: [
-					{
-						id: 0,
-						description: 'Backup!',
-						filename: '1723610394559.zip'
-					}
 				]
 			})
 		);
+
+		console.log(body);
 
 		fetch(Bun.env.WEBHOOK, {
 			method: 'POST',
