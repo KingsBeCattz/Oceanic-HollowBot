@@ -1,5 +1,5 @@
 import { profileImage } from 'discord-arts';
-import type { Member, User } from 'oceanic.js';
+import type { Guild, Member } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command(
@@ -21,20 +21,18 @@ export default new Command(
 		}
 	],
 	async (ctx) => {
-		const user = ctx.get(
+		const member = ctx.get(
 			'user',
-			await ctx.util.findUser(ctx.args?.shift() ?? ctx.user.id)
-        ) as User;
-
-        const member = await ctx.guild?.getMember(user.id) as Member
+			await ctx.util.findMember((ctx.guild as Guild).id, ctx.args?.shift() ?? ctx.user.id)
+        ) as Member;
         
         const timestamp = {
-            created: Number((user.createdAt.valueOf() / 1000).toFixed()),
-            joined: Number(((member.joinedAt ?? user.createdAt)?.valueOf() /1000).toFixed())
+            created: Number((member.user.createdAt.valueOf() / 1000).toFixed()),
+            joined: Number(((member.joinedAt ?? member.user.createdAt)?.valueOf() /1000).toFixed())
         }
 
 		const data = (await (
-			await fetch(`https://discord-arts.asure.dev/v1/user/${user.id}`)
+			await fetch(`https://discord-arts.asure.dev/v1/user/${member.user.id}`)
 		)
 			.json()
 			.catch((_) => ({}))).data;
@@ -44,15 +42,15 @@ export default new Command(
 		ctx.send({
 			embeds: [
 				{
-					title: user.globalName ?? `${user.username}#${user.discriminator}`,
+					title: member.user.globalName ?? `${member.user.username}#${member.user.discriminator}`,
 					color: data.decoration.profileColors ? parseInt(data.decoration.profileColors[1].slice(1), 16) : ctx.util.random(16777215),
 					image: {
-						url: `attachment://${user.id}.card.png`
+						url: `attachment://${member.user.id}.card.png`
 					},
 					thumbnail: {
-						url: `attachment://${user.id}.icon.png`
+						url: `attachment://${member.user.id}.icon.png`
                     },
-                    description: `- **Name**: ${user.globalName}\n - **Nick**: ${member.nick ?? 'Don\'t have a nickname'}\n- **User**: ${user.tag}\n- **Creation date**: <t:${timestamp.created}:d> <t:${timestamp.created}:T>\n${timestamp.joined ? `- **Joined date**: <t:${timestamp.joined}:d> <t:${timestamp.joined}:T>` : ''}`,
+                    description: `- **Name**: ${member.user.globalName}\n - **Nick**: ${member.nick ?? 'Don\'t have a nickname'}\n- **User**: ${member.user.tag}\n- **Creation date**: <t:${timestamp.created}:d> <t:${timestamp.created}:T>\n${timestamp.joined ? `- **Joined date**: <t:${timestamp.joined}:d> <t:${timestamp.joined}:T>` : ''}`,
                     fields: [
                         {
                             name: 'Medals',
@@ -67,11 +65,11 @@ export default new Command(
 			],
 			files: [
 				{
-					name: `${user.id}.card.png`,
-					contents: await profileImage(user.id)
+					name: `${member.user.id}.card.png`,
+					contents: await profileImage(member.user.id)
 				},
 				{
-					name: `${user.id}.icon.png`,
+					name: `${member.user.id}.icon.png`,
 					contents: await ctx.util.canva.circle_cut(`${photo}?size=1024`)
 				}
 			]

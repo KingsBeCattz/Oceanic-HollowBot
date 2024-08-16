@@ -1,5 +1,5 @@
 import type { APIEmoji } from 'discord-api-types/v10';
-import type { Client } from 'oceanic.js';
+import type { Client, Guild } from 'oceanic.js';
 import { CanvaUtil } from './canva.util';
 import { CommandManager } from './command.manager';
 import { EventManager } from './event.manager';
@@ -167,5 +167,18 @@ export class Util {
 				return null;
 			})
 		);
+	}
+
+	public async findMember(guild: string, arg: string) {
+		const id = arg.replace(/[^0-9]/g, '');
+
+		return (
+			this.client.guilds.get(guild)?.members.get(id) ??
+			(this.client.guilds.get(guild) as Guild).members.find(
+				(m) =>
+					m.user.username.toLowerCase().includes(arg.toLowerCase()) ||
+					m.user.globalName?.toLowerCase().includes(arg.toLowerCase())
+			)
+		)
 	}
 }
