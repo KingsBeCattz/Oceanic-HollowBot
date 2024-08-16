@@ -159,8 +159,8 @@ export class Util {
 			this.client.users.get(id) ??
 			this.client.users.find(
 				(u) =>
-					u.username.toLowerCase() === arg.toLowerCase() ||
-					u.globalName?.toLowerCase() === arg.toLowerCase()
+					u.username.toLowerCase().includes(arg.toLowerCase()) ||
+					u.globalName?.toLowerCase().includes(arg.toLowerCase())
 			) ??
 			this.client.rest.users.get(id).catch((e) => {
 				log.error(String(e), 'UTIL.FINDUSER()');
