@@ -50,7 +50,7 @@ export default new Command(
 					thumbnail: {
 						url: `attachment://${member.id}.icon.png`
                     },
-                    description: `- **Name**: ${member.user.globalName}\n - **Nick**: ${member.nick ?? 'Don\'t have a nickname'}\n- **User**: ${member.user.tag} (<@${member.id}>)\n- **Creation date**: <t:${timestamp.created}:d> <t:${timestamp.created}:T>\n${timestamp.joined ? `- **Joined date**: <t:${timestamp.joined}:d> <t:${timestamp.joined}:T>` : ''}`,
+                    description: `- **Name**: ${member.user.globalName ?? member.user.username}\n - **Nick**: ${member.nick ?? 'Don\'t have a nickname'}\n- **User**: ${member.user.tag} (<@${member.id}>)\n- **Creation date**: <t:${timestamp.created}:d> <t:${timestamp.created}:T>\n${timestamp.joined ? `- **Joined date**: <t:${timestamp.joined}:d> <t:${timestamp.joined}:T>` : ''}`,
                     fields: [
                         {
                             name: 'Medals',
@@ -66,7 +66,10 @@ export default new Command(
 			files: [
 				{
 					name: `${member.id}.card.png`,
-					contents: await profileImage(member.id)
+                    contents: await profileImage(member.id, {
+                        badgesFrame: true,
+                        presenceStatus: member.presence?.clientStatus.mobile ? 'phone' : member.presence?.status
+                    })
 				},
 				{
 					name: `${member.id}.icon.png`,

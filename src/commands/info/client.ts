@@ -1,3 +1,4 @@
+import { profileImage } from 'discord-arts';
 import { VERSION } from 'oceanic.js';
 import packagejson from 'package.json';
 import { Command, CommandTypes } from 'src/builders/command.builder';
@@ -32,12 +33,18 @@ export default new Command(
 						}
 					],
 					color: 0,
-					thumbnail: {
-						url: `https://cdn.discordapp.com/avatars/${bot.user.id}/${bot.user.avatar}.png`
-					},
 					image: {
-						url: `https://cdn.discordapp.com/banners/${bot.user.id}/${bot.user.banner}.gif?size=2048`
+						url: `attachment://${ctx.client.user.id}.card.png`
 					}
+				}
+			],
+			files: [
+				{
+					name: `${ctx.client.user.id}.card.png`,
+                    contents: await profileImage(ctx.client.user.id, {
+                        badgesFrame: true,
+                        presenceStatus: ctx.guild?.clientMember.presence?.clientStatus.mobile ? 'phone' : ctx.guild?.clientMember.presence?.status
+                    })
 				}
 			]
 		});
