@@ -41,7 +41,7 @@ export class Util {
 				this.commands.find(
 					(c) =>
 						c.data.name === name.toLowerCase() ??
-						(c.data.alias || []).some((a) => a === name.toLowerCase())
+						(c.data.alias || []).includes(name.toLowerCase())
 				)) ||
 			null
 		);
