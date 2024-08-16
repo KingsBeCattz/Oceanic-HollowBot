@@ -1,4 +1,5 @@
 import { profileImage } from 'discord-arts';
+import type { User } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command(
@@ -22,8 +23,8 @@ export default new Command(
 	async (ctx) => {
 		const user = ctx.get(
 			'user',
-			(await ctx.util.findUser(ctx.args?.shift() ?? '')) ?? ctx.user
-		);
+			await ctx.util.findUser(ctx.args?.shift() ?? ctx.user.id)
+		) as User;
 		const data = await (
 			await fetch(`https://discord-arts.asure.dev/v1/user/${user.id}`)
 		)
