@@ -14,11 +14,6 @@ export default new Command(
 	async (ctx) => {
 		const body = new FormData();
 		body.append(
-			'file',
-			new Blob([readFileSync('src/database/backups/1723610394559.zip')]),
-			'1723610394559.zip'
-		);
-		body.append(
 			'payload_json',
 			JSON.stringify({
 				content: 'Este es un mensaje enviado mediante fetch.',
