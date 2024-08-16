@@ -41,7 +41,7 @@ export class Util {
 				this.commands.find(
 					(c) =>
 						c.data.name === name.toLowerCase() ??
-						c.data.alias?.some((a) => a === name.toLowerCase())
+						(c.data.alias || []).some((a) => a === name.toLowerCase())
 				)) ||
 			null
 		);
@@ -179,10 +179,15 @@ export class Util {
 					m.user.username.toLowerCase().includes(arg.toLowerCase()) ||
 					m.user.globalName?.toLowerCase().includes(arg.toLowerCase())
 			)
-		)
+		);
 	}
 
 	public ping() {
-		return Number((this.client.shards.map(s => s.latency).reduce((a, b) => a + b) / this.client.shards.size).toFixed(2))
+		return Number(
+			(
+				this.client.shards.map((s) => s.latency).reduce((a, b) => a + b) /
+				this.client.shards.size
+			).toFixed(2)
+		);
 	}
 }
