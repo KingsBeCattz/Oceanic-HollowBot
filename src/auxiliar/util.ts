@@ -1,3 +1,4 @@
+import { cpus } from 'node:os';
 import type { APIEmoji } from 'discord-api-types/v10';
 import type { Client, Guild } from 'oceanic.js';
 import { CanvaUtil } from './canva.util';
@@ -189,5 +190,18 @@ export class Util {
 				this.client.shards.size
 			).toFixed(2)
 		);
+	}
+
+	public cpu(decimals = 2) {
+		const cpu = cpus();
+		const avgs = cpu.map((cpu) => {
+			const total = Object.values(cpu.times).reduce((a, b) => a + b);
+			const nonIdle = total - cpu.times.idle;
+			return nonIdle / total;
+		});
+		return {
+			model: cpu[0].model,
+			usage: (avgs.reduce((a, b) => a + b) / cpu.length).toFixed(decimals)
+		};
 	}
 }

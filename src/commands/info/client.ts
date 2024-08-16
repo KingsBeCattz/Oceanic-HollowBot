@@ -23,15 +23,21 @@ export default new Command(
 					title: bot.user.username,
 					fields: [
 						{
-							name: 'System',
-						    value: `**Version**: ${packagejson.version}\n**Runtime**: Bun@${Bun.version}\n**Language**: TypeScript\n**Library**: Oceanic.JS@${VERSION}\n**Ping**: ${ctx.util.ping()}ms\n**Developer**: <@${owner.user.id}>`
-						},
-						{
 							name: 'Stats',
 							value: `**Servers**: ${ctx.client.guilds.size.format()}\n**Users**: ${ctx.client.guilds
 								.map((g) => g.memberCount)
 								.reduce((a, b) => a + b, 0)
-								.format()}\n**Commands**: ${ctx.util.commands.size.format()}\n**Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}`,
+								.format()}\n**Commands**: ${ctx.util.commands.size.format()}\n**Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}\n**Developer**: <@${owner.user.id}>`,
+							inline: true
+						},
+						{
+							name: 'Host',
+							value: `**CPU model**:${ctx.util.cpu().model}\n**CPU usage**:${ctx.util.cpu().usage}%\n**Ping**: ${ctx.util.ping()}ms`,
+							inline: true
+						},
+						{
+							name: 'System',
+							value: `**Version**: ${packagejson.version}\n**Runtime**: Bun@${Bun.version}\n**Language**: TypeScript\n**Library**: Oceanic.JS@${VERSION}`,
 							inline: true
 						}
 					],
@@ -44,10 +50,14 @@ export default new Command(
 			files: [
 				{
 					name: `${ctx.client.user.id}.card.png`,
-                    contents: await profileImage(ctx.client.user.id, {
-                        badgesFrame: true,
-                        presenceStatus: ctx.guild?.clientMember.presence?.clientStatus.mobile ? 'phone' : ctx.guild?.clientMember.presence?.status
-                    })
+					contents: await profileImage(ctx.client.user.id, {
+						badgesFrame: true,
+						presenceStatus: ctx.guild?.clientMember.presence?.clientStatus.mobile
+							? 'phone'
+							: ctx.guild?.clientMember.presence?.status,
+						customTag: 'An awesome bot!',
+						customDate: 'Hello from Mexico!'
+					})
 				}
 			]
 		});
