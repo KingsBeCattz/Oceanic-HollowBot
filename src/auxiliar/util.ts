@@ -151,4 +151,17 @@ export class Util {
 		if (user.global_name) return Number((BigInt(user.id) >> 22n) % 6n);
 		return Number(user.discriminator) % 5;
 	}
+
+	public async findUser(arg: string) {
+		const id = arg.replace(/[^0-9]/g, '');
+
+		return (
+			this.client.users.get(id) ??
+			this.client.users.find(
+				(u) =>
+					u.username === arg.toLowerCase() || u.globalName === arg.toLowerCase()
+			) ??
+			this.client.rest.users.get(id)
+		);
+	}
 }

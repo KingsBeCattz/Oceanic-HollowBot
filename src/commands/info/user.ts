@@ -22,23 +22,14 @@ export default new Command(
 	async (ctx) => {
 		const data = await ctx.profile(ctx.get('user', ctx.user).id);
 
-		let photo: {
-			url: string;
-			format: 'png' | 'gif';
-		};
+		let photo: string;
 
 		if (data.user.avatar) {
 			const f = data.user.avatar.startsWith('a_') ? 'gif' : 'png';
 
-			photo = {
-				url: `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.${f}`,
-				format: f
-			};
+			photo = `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.${f}`;
 		} else
-			photo = {
-				url: `https://cdn.discordapp.com/embed/avatars/${ctx.util.defaultAvatar(data.user)}.png`,
-				format: 'png'
-			};
+			photo = `https://cdn.discordapp.com/embed/avatars/${ctx.util.defaultAvatar(data.user)}.png`;
 
 		ctx.send({
 			embeds: [
@@ -51,7 +42,7 @@ export default new Command(
 						url: `attachment://${data.user.id}.card.png`
 					},
 					thumbnail: {
-						url: `attachment://${data.user.id}.icon.${photo.format}`
+						url: `attachment://${data.user.id}.icon.png`
 					}
 				}
 			],
@@ -61,8 +52,8 @@ export default new Command(
 					contents: await profileImage(data.user.id)
 				},
 				{
-					name: `${data.user.id}.icon.${photo.format}`,
-					contents: await ctx.util.canva.circle_cut(photo.url)
+					name: `${data.user.id}.icon.png`,
+					contents: await ctx.util.canva.circle_cut(photo)
 				}
 			]
 		});
