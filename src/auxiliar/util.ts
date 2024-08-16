@@ -40,8 +40,8 @@ export class Util {
 			(this.commands.get(name.toLowerCase()) ??
 				this.commands.find(
 					(c) =>
-						c.data.name === name.toLowerCase() ??
-						(c.data.alias || []).includes(name.toLowerCase())
+						c.data.name === name.toLowerCase() ||
+						(c.data.alias || []).some((a) => a === name.toLowerCase())
 				)) ||
 			null
 		);
