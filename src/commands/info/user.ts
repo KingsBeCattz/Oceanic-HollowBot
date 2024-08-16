@@ -30,7 +30,7 @@ export default new Command(
 			.json()
 			.catch((_) => ({}));
 
-		const photo = data.data.avatarURL ?? data.data.defaultAvatarURL;
+		const photo = data.data.assets.avatarURL ?? data.data.assets.defaultAvatarURL;
 
 		ctx.send({
 			embeds: [
