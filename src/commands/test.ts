@@ -31,11 +31,12 @@ export default new Command(
 				allowed_mentions: { parse: [] }
 			})
 		})
-			.then(() =>
+			.then((r) => {
+				r.json().then(console.log);
 				ctx.send({
 					content: 'Se envio!'
-				})
-			)
+				});
+			})
 			.catch(() =>
 				ctx.send({
 					content: 'Fallo!'
