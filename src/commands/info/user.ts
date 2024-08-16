@@ -20,7 +20,12 @@ export default new Command(
 		}
 	],
 	async (ctx) => {
-		const data = await ctx.profile(ctx.get('user', ctx.user).id);
+		const data = await ctx.profile(
+			ctx.get(
+				'user',
+				(await ctx.util.findUser(ctx.args?.shift() ?? '')) ?? ctx.user
+			).id
+		);
 
 		let photo: string;
 
