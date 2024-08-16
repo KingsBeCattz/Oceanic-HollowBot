@@ -171,6 +171,7 @@ export class Util {
 	}
 
 	public async findMember(guild: string, arg: string) {
+		if(!guild || !arg) return null
 		const id = arg.replace(/[^0-9]/g, '');
 
 		return (
@@ -180,7 +181,7 @@ export class Util {
 					m.user.username.toLowerCase().includes(arg.toLowerCase()) ||
 					m.user.globalName?.toLowerCase().includes(arg.toLowerCase())
 			)
-		);
+		) ?? null;
 	}
 
 	public ping() {
