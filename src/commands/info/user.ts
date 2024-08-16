@@ -29,8 +29,8 @@ export default new Command(
         const member = await ctx.guild?.getMember(user.id) as Member
         
         const timestamp = {
-            created: Number((Number((BigInt(user.id) >> 22n) + 1420070400000n) / 1000).toFixed()),
-            joined: member.joinedAt?.valueOf()
+            created: Number((user.createdAt.valueOf() / 1000).toFixed()),
+            joined: Number(((member.joinedAt ?? user.createdAt)?.valueOf() /1000).toFixed())
         }
 
 		const data = (await (
@@ -52,11 +52,17 @@ export default new Command(
 					thumbnail: {
 						url: `attachment://${user.id}.icon.png`
                     },
-                    description: `- **Name**: ${user.globalName}
-                    - **Nick**: ${member.nick ?? 'Do not have a nickname'}
-                    - **User**: ${user.tag}
-                    - **Creation date**: <t:${timestamp.created}:d> <t:${timestamp.created}:T>
-                    ${timestamp.joined ? `- **Joined date**: <t:${timestamp.joined}:d> <t:${timestamp.joined}:T>` : ''}`
+                    description: `- **Name**: ${user.globalName}\n - **Nick**: ${member.nick ?? 'Don\'t have a nickname'}\n- **User**: ${user.tag}\n- **Creation date**: <t:${timestamp.created}:d> <t:${timestamp.created}:T>\n${timestamp.joined ? `- **Joined date**: <t:${timestamp.joined}:d> <t:${timestamp.joined}:T>` : ''}`,
+                    fields: [
+                        {
+                            name: 'Medals',
+                            value: `Don't have any medal!`
+                        },
+                        {
+                            name: 'Roles',
+                            value: member.roles.format()
+                        }
+                    ]
 				}
 			],
 			files: [
