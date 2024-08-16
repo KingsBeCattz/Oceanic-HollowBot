@@ -23,21 +23,21 @@ export default new Command(
 					title: bot.user.username,
 					fields: [
 						{
-							name: 'Stats',
-							value: `**Servers**: ${ctx.client.guilds.size.format()}\n**Users**: ${ctx.client.guilds
+							name: '⠇Stats⠸',
+							value: `**⠐ Servers**: ${ctx.client.guilds.size.format()}\n**⠐ Users**: ${ctx.client.guilds
 								.map((g) => g.memberCount)
 								.reduce((a, b) => a + b, 0)
-								.format()}\n**Commands**: ${ctx.util.commands.size.format()}\n**Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}\n**Developer**: <@${owner.user.id}>`,
+								.format()}\n**⠐ Commands**: ${ctx.util.commands.size.format()}\n**⠐ Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}\n**⠐ Developer**:\n<@${owner.user.id}>`,
 							inline: true
 						},
 						{
-							name: 'Host',
-							value: `**CPU model**:${ctx.util.cpu().model}\n**CPU usage**:${ctx.util.cpu().usage}%\n**Ping**: ${ctx.util.ping()}ms`,
+							name: '⠇Host⠸',
+							value: `**⠐ CPU model**:\n${ctx.util.cpu().model}\n**⠐ CPU usage**: ${ctx.util.cpu().usage}%\n**⠐ Ping**: ${ctx.util.ping()}ms`,
 							inline: true
 						},
 						{
-							name: 'System',
-							value: `**Version**: ${packagejson.version}\n**Runtime**: Bun@${Bun.version}\n**Language**: TypeScript\n**Library**: Oceanic.JS@${VERSION}`,
+							name: '⠇System⠸',
+							value: `**⠐ Version**: ${packagejson.version}\n**⠐ Runtime**: Bun@${Bun.version}\n**⠐ Language**: TypeScript\n**⠐ Library**: Oceanic.JS@${VERSION}`,
 							inline: true
 						}
 					],
@@ -59,7 +59,27 @@ export default new Command(
 						customDate: 'Hello from Mexico!'
 					})
 				}
-			]
+			],
+			components: [{
+				type: 1,
+				components: [{
+					type: 2,
+					style: 5,
+					url: Bun.env.SUPPORT,
+					label: 'Need help?',
+					emoji: {
+						id: '1129907740265943112'
+					}
+				}, {
+					type: 2,
+					style: 5,
+					url: 'https://discord.gg/ee8WUaBnAY',
+					label: 'Icons!',
+					emoji: {
+						id: '1129906859705372692'
+					}
+				}]
+			}]
 		});
 	}
 );

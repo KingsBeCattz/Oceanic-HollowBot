@@ -21,13 +21,8 @@ export default new Command(
 		}
 	],
 	async (ctx) => {
-		const member = ctx.get(
-			'user',
-			await ctx.util.findMember(
-				(ctx.guild as Guild).id,
-				ctx.args?.shift() ?? ctx.user.id
-			)
-		) as Member;
+		const member = await ctx.util.findMember((ctx.guild as Guild).id, (await ctx.get(
+			'user') as Member).id ?? ctx.args?.shift() ?? ctx.user.id) ?? ctx.member!
 
 		const timestamp = {
 			created: Number((member.user.createdAt.valueOf() / 1000).toFixed()),
