@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command(
@@ -11,12 +12,15 @@ export default new Command(
 	[],
 	[],
 	async (ctx) => {
-		fetch(Bun.env.WEBHOOK, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
+		const body = new FormData();
+		body.append(
+			'file',
+			new Blob([readFileSync('src/database/backups/1723610394559.zip')]),
+			'1723610394559.zip'
+		);
+		body.append(
+			'payload_json',
+			JSON.stringify({
 				content: 'Este es un mensaje enviado mediante fetch.',
 				embeds: [
 					{
@@ -26,6 +30,14 @@ export default new Command(
 					}
 				]
 			})
+		);
+
+		fetch(Bun.env.WEBHOOK, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body
 		})
 			.then((r) => {
 				r.json().then(console.log);
