@@ -21,14 +21,17 @@ export default new Command(
 			embeds: [
 				{
 					title: bot.user.username,
-					description: `**Version**: ${packagejson.version}\n**Runtime**: Bun@${Bun.version}\n**Language**: TypeScript\n**Library**: Oceanic.JS@${VERSION}\n**Developer**: <@${owner.user.id}>`,
 					fields: [
 						{
+							name: 'System',
+						    value: `**Version**: ${packagejson.version}\n**Runtime**: Bun@${Bun.version}\n**Language**: TypeScript\n**Library**: Oceanic.JS@${VERSION}\n**Ping**: ${ctx.util.ping()}ms\n**Developer**: <@${owner.user.id}>`
+						},
+						{
 							name: 'Stats',
-							value: `Servers: ${ctx.client.guilds.size.format()}\nUsers: ${ctx.client.guilds
+							value: `**Servers**: ${ctx.client.guilds.size.format()}\n**Users**: ${ctx.client.guilds
 								.map((g) => g.memberCount)
 								.reduce((a, b) => a + b, 0)
-								.format()}\nCommands: ${ctx.util.commands.size.format()}`,
+								.format()}\n**Commands**: ${ctx.util.commands.size.format()}\n**Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}`,
 							inline: true
 						}
 					],

@@ -181,4 +181,8 @@ export class Util {
 			)
 		)
 	}
+
+	public ping() {
+		return Number((this.client.shards.map(s => s.latency).reduce((a, b) => a + b) / this.client.shards.size).toFixed(2))
+	}
 }
