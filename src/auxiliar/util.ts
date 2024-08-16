@@ -1,5 +1,6 @@
 import type { APIEmoji } from 'discord-api-types/v10';
 import type { Client } from 'oceanic.js';
+import { CanvaUtil } from './canva.util';
 import { CommandManager } from './command.manager';
 import { EventManager } from './event.manager';
 import * as log from './logger';
@@ -25,10 +26,12 @@ const badgets = {
 export class Util {
 	commands: CommandManager;
 	events: EventManager;
+	canva: CanvaUtil;
 
 	constructor(public client: Client) {
 		this.events = new EventManager(client);
 		this.commands = new CommandManager();
+		this.canva = new CanvaUtil();
 	}
 
 	public command(name?: string) {
