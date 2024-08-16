@@ -29,11 +29,16 @@ export default new Command(
 						description: 'Descripción del Embed',
 						color: 16711680
 					}
+				],
+				files: [
+					{
+						id: 0,
+						description: 'Backup!',
+						filename: '1723610394559.zip'
+					}
 				]
 			})
 		);
-
-		console.log(body);
 
 		fetch(Bun.env.WEBHOOK, {
 			method: 'POST',

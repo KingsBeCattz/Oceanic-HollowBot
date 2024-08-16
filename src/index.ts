@@ -14,8 +14,8 @@ Number.prototype.format = function (): string {
 };
 
 BigInt.prototype.format = function (): string {
-	return Number(this).format()
-}
+	return Number(this).format();
+};
 
 Array.prototype.format = function (separators): string {
 	if (this.length <= 0) return this[0] ?? '';
@@ -42,6 +42,8 @@ util.events.load('/src/events/');
 util.commands.load('/src/commands/');
 
 db.start();
+
+console.log(webhook.send.toString());
 
 db.on('backup', (path, type) => {
 	if (type !== 'create') return;
