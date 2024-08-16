@@ -13,10 +13,14 @@ Number.prototype.format = function (): string {
 	return String(this).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
+BigInt.prototype.format = function (): string {
+	return Number(this).format()
+}
+
 Array.prototype.format = function (separators): string {
 	if (this.length <= 0) return this[0] ?? '';
 	const last = this.pop();
-	return `${this.join(`${separators.comma} `)} ${separators.and} ${last}`;
+	return `${this.join(`${separators?.comma ?? ','} `)} ${separators?.and ?? '&'} ${last}`;
 };
 
 export const client = new Client({
@@ -27,7 +31,7 @@ export const client = new Client({
 });
 
 const webhook = new WebhookClient({
-	url: 'https://discord.com/api/webhooks/1273715273857372262/5oG4fP65nqa0pyOuoo6v0rIJ4PTGblSO67GNmaAG0yDNVg229A-aE8uww5C2uTLjC5CL'
+	url: process.env.WEBHOOK
 });
 
 export const util = new Util(client);

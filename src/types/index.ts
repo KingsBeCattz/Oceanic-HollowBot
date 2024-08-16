@@ -60,8 +60,12 @@ declare global {
 		format(): string;
 	}
 
+	interface BigInt {
+		format(): string;
+	}
+
 	interface Array<T> {
-		format(separators: { comma: string; and: string }): string;
+		format(separators?: { comma: string; and: string }): string;
 	}
 }
 
