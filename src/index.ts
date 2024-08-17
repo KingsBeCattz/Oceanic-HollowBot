@@ -43,8 +43,6 @@ util.commands.load('/src/commands/');
 
 db.start();
 
-console.log(webhook.send.toString());
-
 db.on('backup', (path, type) => {
 	if (type !== 'create') return;
 
