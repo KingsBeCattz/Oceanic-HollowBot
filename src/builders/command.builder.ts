@@ -7,11 +7,11 @@ import type { Context } from './context.builder';
 export type Condition = (ctx: Context) => MaybePromise<boolean>;
 
 export enum CommandTypes {
-	Developer = 'Developer',
-	Fun = 'Fun',
-	Configuration = 'Configuration',
 	Information = 'Information',
 	Staff = 'Staff',
+	Fun = 'Fun',
+	Configuration = 'Configuration',
+	Developer = 'Developer',
 	Generic = 'Generic'
 }
 

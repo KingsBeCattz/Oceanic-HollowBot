@@ -1,16 +1,25 @@
 import {
+	type AnyInteractionChannel,
 	type ComponentInteraction,
+	type ComponentTypes,
 	type Interaction,
 	type Message,
-	TypedEmitter
+	type SelectMenuTypes,
+	TypedEmitter,
+	type Uncached
 } from 'oceanic.js';
 
-export interface awaitMessageComponentsEvents {
-	collect: [interaction: ComponentInteraction];
+export interface InteractionCollectorEvents {
+	collect: [
+		interaction: ComponentInteraction<
+			ComponentTypes.BUTTON | SelectMenuTypes,
+			AnyInteractionChannel | Uncached
+		>
+	];
 	end: [];
 }
 
-export class awaitMessageComponents extends TypedEmitter<awaitMessageComponentsEvents> {
+export class InteractionCollector extends TypedEmitter<InteractionCollectorEvents> {
 	private listener: (i: Interaction) => unknown;
 	private timeout: Timer;
 
@@ -22,6 +31,7 @@ export class awaitMessageComponents extends TypedEmitter<awaitMessageComponentsE
 
 		this.listener = (i) => {
 			if (!i.isComponentInteraction() || i.message.id !== message.id) return;
+			this.emit('collect', i);
 		};
 
 		message.client.on('interactionCreate', this.listener);

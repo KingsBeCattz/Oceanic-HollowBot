@@ -1,5 +1,6 @@
 import type { APIEmbedField } from 'discord-api-types/v10';
 import { Command, CommandTypes } from 'src/builders/command.builder';
+import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
 export default new Command(
 	{
@@ -129,5 +130,25 @@ export default new Command(
 				]
 			});
 		}
+
+		const collector = new InteractionCollector(
+			await ctx.send({
+				embeds: [
+					{
+						title: 'Welcome',
+						color: ctx.util.random.number(16777215),
+						description: `Welcome to the help menu, below in the drop down menu are categories and their commands, and if you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
+					}
+				]
+			}),
+			5 * 60000
+		);
+
+		collector.on('collect', async (i) => {
+			i.defer(64);
+			i.createFollowup({
+				content: 'Hola!'
+			});
+		});
 	}
 );
