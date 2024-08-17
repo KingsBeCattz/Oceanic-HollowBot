@@ -35,6 +35,37 @@ export class Util {
 		this.canva = new CanvaUtil();
 	}
 
+	get random() {
+		return {
+			random(max: number, min = 0, decimals = 0): number {
+				if (!max) return 0;
+				if (
+					max === 0 ||
+					max === min ||
+					typeof max !== 'number' ||
+					typeof min !== 'number'
+				)
+					return 0;
+				const random = Math.random() * (max - min) + min;
+				return Number(random.toFixed(decimals));
+			},
+			onArray<T>(array: T[], length = 1): T[] {
+				if (!Array.isArray(array)) return [];
+				const len = typeof length !== 'number' ? 1 : length;
+				const arr: T[] = [];
+				if (array.length < len) return array;
+				let j = 0;
+				do {
+					const random = Math.floor(Math.random() * array.length);
+					if (arr.includes(array[random]) === true) continue;
+					arr.push(array[random]);
+					j++;
+				} while (j < len);
+				return arr;
+			}
+		};
+	}
+
 	public command(name?: string) {
 		if (!name) return null;
 		return (
@@ -131,19 +162,6 @@ export class Util {
 		return Object.keys(badgets).filter((k) => (flags & badgets[k]) !== 0n);
 	}
 
-	public random(max: number, min = 0, decimals = 0): number {
-		if (!max) return 0;
-		if (
-			max === 0 ||
-			max === min ||
-			typeof max !== 'number' ||
-			typeof min !== 'number'
-		)
-			return 0;
-		const random = Math.random() * (max - min) + min;
-		return Number(random.toFixed(decimals));
-	}
-
 	public defaultAvatar(user: {
 		global_name: string | null;
 		id: string;
@@ -171,7 +189,7 @@ export class Util {
 	}
 
 	public async findMember(guild: string, arg: string) {
-		if(!guild || !arg) return null
+		if (!guild || !arg) return null;
 		const id = arg.replace(/[^0-9]/g, '');
 
 		return (
@@ -180,8 +198,9 @@ export class Util {
 				(m) =>
 					m.user.username.toLowerCase().includes(arg.toLowerCase()) ||
 					m.user.globalName?.toLowerCase().includes(arg.toLowerCase())
-			)
-		) ?? null;
+			) ??
+			null
+		);
 	}
 
 	public ping() {

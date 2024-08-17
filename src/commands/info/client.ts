@@ -15,19 +15,20 @@ export default new Command(
 	[],
 	async (ctx) => {
 		const bot = await ctx.profile(ctx.client.user.id);
-		const owner = await ctx.profile('1125490330679115847');
+		const owner = await ctx.util.findUser('1125490330679115847');
 
 		ctx.send({
 			embeds: [
 				{
 					title: bot.user.username,
+					description: bot.user_profile.bio,
 					fields: [
 						{
 							name: '⠇Stats⠸',
 							value: `**⠐ Servers**: ${ctx.client.guilds.size.format()}\n**⠐ Users**: ${ctx.client.guilds
 								.map((g) => g.memberCount)
 								.reduce((a, b) => a + b, 0)
-								.format()}\n**⠐ Commands**: ${ctx.util.commands.size.format()}\n**⠐ Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}\n**⠐ Developer**:\n<@${owner.user.id}>`,
+								.format()}\n**⠐ Commands**: ${ctx.util.commands.size.format()}\n**⠐ Slashes**: ${(await ctx.client.application.getGlobalCommands()).length.format()}\n**⠐ Developer**:\n<@${owner?.id}>`,
 							inline: true
 						},
 						{

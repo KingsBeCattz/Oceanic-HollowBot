@@ -52,7 +52,7 @@ export default new Command(
 						`${member.user.username}#${member.user.discriminator}`,
 					color: data.decoration.profileColors
 						? Number.parseInt(data.decoration.profileColors[1].slice(1), 16)
-						: ctx.util.random(16777215),
+						: ctx.util.random.number(16777215),
 					image: {
 						url: `attachment://${member.id}.card.png`
 					},

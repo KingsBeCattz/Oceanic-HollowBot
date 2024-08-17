@@ -1,4 +1,5 @@
 import { util, client, db } from 'src';
+import Activities from 'src/auxiliar/bot.activities';
 import * as log from 'src/auxiliar/logger';
 import { Event } from 'src/builders/event.builder';
 
@@ -25,6 +26,10 @@ export default new Event('ready', async () => {
 		);
 		await db.delete('client', 'notify.reboot');
 	}
+
+	setInterval(() =>
+		client.editStatus('online', util.random.onArray(Activities))
+	);
 
 	log.info(`Logged as ${client.user.tag}`, 'CONNECTION');
 });
