@@ -1,6 +1,6 @@
 import { cpus } from 'node:os';
 import type { APIEmoji } from 'discord-api-types/v10';
-import type { Client, Guild } from 'oceanic.js';
+import type { Client, Guild, MessageActionRow } from 'oceanic.js';
 import { CommandTypes } from 'src/builders/command.builder';
 import { CanvaUtil } from './canva.util';
 import { CommandManager } from './command.manager';
@@ -288,5 +288,17 @@ export class Util {
 			default:
 				return 'Unknown';
 		}
+	}
+
+	public disable_components(components: MessageActionRow[], noLinks = true) {
+		for (const row of components) {
+			if (!row.components) continue;
+			for (const component of row.components) {
+				if (component.type === 2 && noLinks && component.style === 5) continue;
+				component.disabled = true;
+			}
+		}
+
+		return components;
 	}
 }

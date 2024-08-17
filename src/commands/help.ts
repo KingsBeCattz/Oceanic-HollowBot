@@ -146,33 +146,70 @@ export default new Command(
 						components: [
 							{
 								type: 2,
-								style: 1,
-								label: 'aa',
-								customID: 'eee'
+								style: 4,
+								label: 'Close Menu',
+								emoji: {
+									id: '1129492489020121169'
+								},
+								customID: 'delete.help'
+							},
+							{
+								type: 2,
+								style: 5,
+								url: Bun.env.SUPPORT,
+								label: 'Need help?',
+								emoji: {
+									id: '1129907740265943112'
+								}
+							},
+							{
+								type: 2,
+								style: 5,
+								url: 'https://discord.gg/ee8WUaBnAY',
+								label: 'Icons!',
+								emoji: {
+									id: '1129906859705372692'
+								}
+							},
+							{
+								type: 2,
+								style: 5,
+								url: 'https://github.com/KingsBeCattz/Oceanic-HollowBot',
+								label: 'Github',
+								emoji: {
+									id: '1274235451607224320'
+								}
 							}
 						]
 					}
 				]
 			}),
-			10000
+			150000
 		);
 
 		collector.on('collect', async (i) => {
-			i.defer(64);
-			i.createFollowup({
-				content: 'Hola!'
-			});
-			console.log(i);
+			if (i.user.id !== collector.message.author.id) {
+				await i.defer(64);
+				return i.createFollowup({
+					content: `U can't use this! <@${i.user.id}>`
+				});
+			}
+
+			if (i.data.customID === 'delete.help') {
+				await i.deferUpdate();
+				await collector.clear();
+			}
+
+			i.deferUpdate();
 		});
 
-		collector.on('end', async () =>
-			ctx.client.rest.channels.createMessage(collector.message.channelID, {
-				content: 'Se acabo la interaccion!',
-				messageReference: {
-					channelID: collector.message.channelID,
-					messageID: collector.message.id
-				}
-			})
-		);
+		collector.on('end', async () => {
+			const { embeds, components } = collector.message;
+
+			collector.message.edit({
+				embeds,
+				components: ctx.util.disable_components(components)
+			});
+		});
 	}
 );
