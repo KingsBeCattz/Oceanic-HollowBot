@@ -188,7 +188,7 @@ export default new Command(
 		);
 
 		collector.on('collect', async (i) => {
-			if (i.user.id !== collector.message.author.id) {
+			if (i.user.id !== ctx.user.id) {
 				await i.defer(64);
 				return i.createFollowup({
 					content: `U can't use this! <@${i.user.id}>`
