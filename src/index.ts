@@ -55,8 +55,11 @@ db.on('backup', (path, type) => {
 	});
 });
 
-process.on('unhandledRejection', async (err, promise) =>
-	log.error(`${err}\n${await promise}`, 'REJECTION')
-);
+process.on('unhandledRejection', (err) => {
+	log.error(
+		err instanceof Error ? err.stack ?? String(err) : String(err),
+		'REJECTION'
+	);
+});
 
 client.connect();

@@ -33,7 +33,7 @@ export default new Command(
 	],
 	async (ctx) => {
 		const time = Date.now();
-		let eval_ = '';
+		let eval_: string;
 		let type:
 			| 'string'
 			| 'number'
@@ -56,6 +56,8 @@ export default new Command(
 		)
 			code.unshift(flag);
 
+		let output: string;
+
 		try {
 			// biome-ignore lint/security/noGlobalEval: The use is protected by conditionals
 			eval_ = await eval(
@@ -67,23 +69,27 @@ export default new Command(
 			);
 
 			type = Array.isArray(eval_) ? 'array' : typeof eval_;
-		} catch (e) {
-			log.error(String(e), 'EVAL.COMMAND');
 
-			eval_ = String(e);
+			if (type === 'function') eval_ = eval_.toString();
+			else
+				eval_ = inspect(eval_, {
+					depth: 0,
+					showHidden: true
+				});
+
+			output = `\`\`\`ts\n${eval_}\n\`\`\``
+				.replaceAll(process.env.TOKEN, '[TOKEN]')
+				.replaceAll('    ', '  ');
+		} catch (err) {
+			const message =
+				err instanceof Error ? err.stack ?? String(err) : String(err);
+
+			log.error(message, 'EVAL.COMMAND');
+
+			output = `\`\`\`sh\n${message}\n\`\`\``;
+			eval_ = message;
 			type = 'error';
 		}
-
-		if (type === 'function') eval_ = eval_.toString();
-		else
-			eval_ = inspect(eval_, {
-				depth: 0,
-				showHidden: true
-			});
-
-		let output = `\`\`\`ts\n${eval_}\n\`\`\``
-			.replaceAll(process.env.TOKEN, '[TOKEN]')
-			.replaceAll('    ', '  ');
 
 		let components: ButtonComponent[] = [
 			{

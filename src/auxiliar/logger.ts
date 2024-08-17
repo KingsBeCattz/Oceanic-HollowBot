@@ -130,6 +130,6 @@ export function error(message: string, from: string) {
 		from ? color(` ${from.toUpperCase()} `, AnsiColor.BgRed, AnsiStyle.Bold) : '',
 		color(' ERROR ', AnsiColor.BgBrightRed, AnsiStyle.Bold),
 		time(),
-		color(format(message), AnsiStyle.Dim)
+		color(format(message), AnsiColor.Red, AnsiStyle.Dim)
 	);
 }

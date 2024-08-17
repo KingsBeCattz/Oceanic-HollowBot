@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command(
@@ -11,7 +10,6 @@ export default new Command(
 	['developer'],
 	[],
 	[],
-	async () => {
-		new Promise((_, reject) => reject(new Error('Something went wrong')));
-	}
+	async (_) =>
+		await new Promise((_, reject) => reject(new Error('Something went wrong')))
 );
