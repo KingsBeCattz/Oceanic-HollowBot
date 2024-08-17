@@ -231,9 +231,37 @@ export default new Command(
 					embeds: [embed]
 				});
 
-			const commands = ctx.util.commands.filter(
-				(c) => c.data.type === i.data.values.raw[0]
-			);
+			const commands = ctx.util.commands
+				.filter((c) => c.data.type === i.data.values.raw[0])
+				.flatMap((c) => {
+					if (c.options[0].type === 2) {
+						return c.options
+							.filter((scg) => scg.type === 2)
+							.flatMap((scg) =>
+								scg.options?.flatMap((sc) => ({
+									name: `${c.data.name} > ${scg.name} > ${sc.name}`,
+									value: sc.description,
+									nsfw: c.data.nsfw
+								}))
+							);
+					}
+
+					if (c.options[0].type === 1) {
+						return c.options
+							.filter((sc) => sc.type === 1)
+							.flatMap((sc) => ({
+								name: `${c.data.name} > ${sc.name}`,
+								value: sc.description,
+								nsfw: c.data.nsfw
+							}));
+					}
+
+					return {
+						name: c.data.name,
+						value: c.data.description,
+						nsfw: c.data.nsfw
+					};
+				});
 
 			i.editFollowup(i.message.id, {
 				embeds: [
@@ -241,13 +269,13 @@ export default new Command(
 						title: `Category: ${i.data.values.raw[0]}`,
 						color: message.embeds[0].color,
 						fields:
-							commands.length === 0
+							commands.length === 0 || commands.some((c) => c === undefined)
 								? undefined
-								: commands.map((c) => ({
-										name: `${c.data.name.capitalize()}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
-										value: c.data.description,
-										inline: true
-									})),
+								: (commands as {
+										name: string;
+										value: string;
+										nsfw: boolean;
+									}[]),
 						description:
 							commands.length === 0 ? 'No commands here, come back later!' : undefined,
 						thumbnail: {
