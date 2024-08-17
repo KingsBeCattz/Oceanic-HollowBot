@@ -1,6 +1,6 @@
 import { cpus } from 'node:os';
 import type { APIEmoji } from 'discord-api-types/v10';
-import type { ApplicationCommandOptions, Client, Guild } from 'oceanic.js';
+import type { Client, Guild } from 'oceanic.js';
 import { CommandTypes } from 'src/builders/command.builder';
 import { CanvaUtil } from './canva.util';
 import { CommandManager } from './command.manager';
@@ -261,21 +261,32 @@ export class Util {
 		}
 	}
 
-	public inspctOp(options: ApplicationCommandOptions[]) {
-		if (options[0].type === 1 || options[0].type === 2)
-			return options
-				.filter((o) => o.type === 1 || o.type === 2)
-				.map((o) => ({
-					name: o.name,
-					description: o.description,
-					type: o.type,
-					options: this.inspctOp(o.options ?? [])
-				}));
-
-		return options.map((o) => ({
-			name: o.name,
-			description: o.description,
-			type: o.type
-		}));
+	public getOpT(type: number) {
+		switch (type) {
+			case 1:
+				return 'Sub Command';
+			case 2:
+				return 'Sub Command Group';
+			case 3:
+				return 'String';
+			case 4:
+				return 'Integer';
+			case 5:
+				return 'Boolean';
+			case 6:
+				return 'User';
+			case 7:
+				return 'Channel';
+			case 8:
+				return 'Role';
+			case 9:
+				return 'Mentionable';
+			case 10:
+				return 'Number';
+			case 11:
+				return 'Attachment';
+			default:
+				return 'Unknown';
+		}
 	}
 }

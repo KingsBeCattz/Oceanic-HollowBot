@@ -45,8 +45,9 @@ export default new Command(
 								name: '⠇Sub Command Groups',
 								value: command.options
 									.filter((o) => o.type === 2)
-									.map((o) => o.name)
-									.join('\n')
+									.map((o) => o.name.capitalize())
+									.join('\n'),
+								inline: true
 							});
 
 							fields.push({
@@ -56,9 +57,10 @@ export default new Command(
 									.flatMap((o) =>
 										o.options
 											?.filter((o) => o.type === 1)
-											.flatMap((so) => `${o.name} > ${so.name}`)
+											.flatMap((so) => `${o.name.capitalize()} > ${so.name.capitalize()}`)
 									)
-									.join('\n')
+									.join('\n'),
+								inline: true
 							});
 
 							fields.push({
@@ -69,7 +71,10 @@ export default new Command(
 										o.options
 											?.filter((o) => o.type === 1)
 											.flatMap((so) =>
-												so.options?.flatMap((soo) => `${o.name} > ${so.name} > ${soo.name}`)
+												so.options?.flatMap(
+													(soo) =>
+														`${o.name.capitalize()} > ${so.name.capitalize()} > ${soo.name.capitalize()} (${ctx.util.getOpT(soo.type)})`
+												)
 											)
 									)
 									.join('\n')
@@ -82,15 +87,21 @@ export default new Command(
 								name: '⠇Sub Commands',
 								value: command.options
 									.filter((o) => o.type === 1)
-									.map((o) => o.name)
-									.join('\n')
+									.map((o) => o.name.capitalize())
+									.join('\n'),
+								inline: true
 							});
 
 							fields.push({
 								name: '⠇Options',
 								value: command.options
 									.filter((o) => o.type === 1)
-									.flatMap((o) => o.options?.flatMap((so) => `${o.name} > ${so.name}`))
+									.flatMap((o) =>
+										o.options?.flatMap(
+											(so) =>
+												`${o.name.capitalize()} > ${so.name.capitalize()} (${ctx.util.getOpT(so.type)})`
+										)
+									)
 									.join('\n')
 							});
 						}
@@ -98,14 +109,16 @@ export default new Command(
 					default:
 						fields.push({
 							name: '⠇Options',
-							value: command.options.flatMap((o) => o.name).join('\n')
+							value: command.options
+								.flatMap((o) => `${o.name.capitalize()} (${ctx.util.getOpT(o.type)})`)
+								.join('\n')
 						});
 				}
 			}
 			ctx.send({
 				embeds: [
 					{
-						title: `⠇Command: ${command.data.name}`,
+						title: `⠇Command: ${command.data.name.capitalize()}`,
 						color: ctx.util.random.number(16777215),
 						description: `${command.data.description} ${command.data.nsfw ? '<:Lewd:1129672128120246292>' : ''}`,
 						thumbnail: {
