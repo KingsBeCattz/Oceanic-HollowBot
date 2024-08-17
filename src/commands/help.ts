@@ -197,7 +197,10 @@ export default new Command(
 				});
 			}
 
-			if (i.data.customID === 'help.delete') return await collector.clear();
+			if (i.data.customID === 'help.delete') {
+				i.deferUpdate()
+				return await collector.clear();
+			}
 
 			i.deferUpdate();
 		});
