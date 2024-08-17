@@ -139,6 +139,19 @@ export default new Command(
 						color: ctx.util.random.number(16777215),
 						description: `Welcome to the help menu, below in the drop down menu are categories and their commands, and if you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
 					}
+				],
+				components: [
+					{
+						type: 1,
+						components: [
+							{
+								type: 2,
+								style: 1,
+								label: 'aa',
+								customID: 'eee'
+							}
+						]
+					}
 				]
 			}),
 			5 * 60000
@@ -149,6 +162,7 @@ export default new Command(
 			i.createFollowup({
 				content: 'Hola!'
 			});
+			console.log(i);
 		});
 	}
 );
