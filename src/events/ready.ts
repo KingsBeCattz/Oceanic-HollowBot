@@ -27,8 +27,9 @@ export default new Event('ready', async () => {
 		await db.delete('client', 'notify.reboot');
 	}
 
-	setInterval(() =>
-		client.editStatus('online', util.random.onArray(Activities))
+	setInterval(
+		() => client.editStatus('online', util.random.onArray(Activities)),
+		5 * 60000
 	);
 
 	log.info(`Logged as ${client.user.tag}`, 'CONNECTION');
