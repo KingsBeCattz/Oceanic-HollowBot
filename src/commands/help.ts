@@ -226,19 +226,19 @@ export default new Command(
 
 			i.deferUpdate();
 
-			if (i.data.values[0] === 'Home')
+			if (i.data.values.raw[0] === 'Home')
 				return i.editFollowup(i.message.id, {
 					embeds: [embed]
 				});
 
 			const commands = ctx.util.commands.filter(
-				(c) => c.data.type === i.data.values[0]
+				(c) => c.data.type === i.data.values.raw[0]
 			);
 
 			i.editFollowup(i.message.id, {
 				embeds: [
 					{
-						title: `Category: ${i.data.values[0]}`,
+						title: `Category: ${i.data.values.raw[0]}`,
 						color: message.embeds[0].color,
 						fields:
 							commands.length === 0
@@ -251,7 +251,7 @@ export default new Command(
 						description:
 							commands.length === 0 ? 'No commands here, come back later!' : undefined,
 						thumbnail: {
-							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(i.data.values[0]).id}.png`
+							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(i.data.values.raw[0]).id}.png`
 						}
 					}
 				]
