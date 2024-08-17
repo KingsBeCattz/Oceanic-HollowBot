@@ -131,8 +131,7 @@ export default new Command(
 			});
 		}
 
-		const collector = new InteractionCollector(
-			await ctx.send({
+		const message = await ctx.send({
 				embeds: [
 					{
 						title: 'Welcome',
@@ -151,7 +150,7 @@ export default new Command(
 								emoji: {
 									id: '1129492489020121169'
 								},
-								customID: 'delete.help'
+								customID: 'help.delete'
 							},
 							{
 								type: 2,
@@ -183,7 +182,10 @@ export default new Command(
 						]
 					}
 				]
-			}),
+			})
+
+		const collector = new InteractionCollector(
+			message,
 			150000
 		);
 
@@ -195,20 +197,15 @@ export default new Command(
 				});
 			}
 
-			if (i.data.customID === 'delete.help') {
-				await i.deferUpdate();
-				await collector.clear();
-				return;
-			}
+			if (i.data.customID === 'help.delete') return await collector.clear();
 
 			i.deferUpdate();
 		});
 
 		collector.on('end', async () => {
-			const { embeds, components } = collector.message;
+			const { embeds, components } = message;
 
-			collector.message.edit({
-				embeds,
+			message.edit({
 				components: ctx.util.disable_components(components)
 			});
 
