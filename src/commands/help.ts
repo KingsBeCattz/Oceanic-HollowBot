@@ -198,6 +198,7 @@ export default new Command(
 			if (i.data.customID === 'delete.help') {
 				await i.deferUpdate();
 				await collector.clear();
+				return;
 			}
 
 			i.deferUpdate();
