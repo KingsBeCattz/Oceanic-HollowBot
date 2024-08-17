@@ -154,7 +154,7 @@ export default new Command(
 					}
 				]
 			}),
-			5 * 60000
+			10000
 		);
 
 		collector.on('collect', async (i) => {
@@ -164,5 +164,15 @@ export default new Command(
 			});
 			console.log(i);
 		});
+
+		collector.on('end', async () =>
+			ctx.client.rest.channels.createMessage(collector.message.channelID, {
+				content: 'Se acabo la interaccion!',
+				messageReference: {
+					channelID: collector.message.channelID,
+					messageID: collector.message.id
+				}
+			})
+		);
 	}
 );
