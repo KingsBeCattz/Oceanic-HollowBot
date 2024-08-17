@@ -210,6 +210,8 @@ export default new Command(
 				embeds,
 				components: ctx.util.disable_components(components)
 			});
+
+			console.log(embeds, components)
 		});
 	}
 );
