@@ -131,75 +131,85 @@ export default new Command(
 			});
 		}
 
+		const embed = {
+			title: 'Welcome',
+			color: ctx.util.random.number(16777215),
+			description: `Welcome to the help menu, below in the drop down menu are categories and their commands\n\nIf you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
+		};
+
+		const menu_options = Object.keys(CommandTypes).map((op) => ({
+			label: op,
+			value: op,
+			emoji: ctx.util.cte(op)
+		}));
+
+		menu_options.unshift({
+			label: 'Home',
+			value: 'Home',
+			emoji: {
+				name: 'Home',
+				id: '1241840687687794811'
+			}
+		});
+
 		const message = await ctx.send({
-				embeds: [
-					{
-						title: 'Welcome',
-						color: ctx.util.random.number(16777215),
-						description: `Welcome to the help menu, below in the drop down menu are categories and their commands\n\nIf you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
-					}
-				],
-				components: [
-					{
-						type: 1,
-						components: [
-							{
-								type: 2,
-								style: 4,
-								label: 'Close Menu',
-								emoji: {
-									id: '1129492489020121169'
-								},
-								customID: 'help.delete'
+			embeds: [embed],
+			components: [
+				{
+					type: 1,
+					components: [
+						{
+							type: 2,
+							style: 4,
+							label: 'Close Menu',
+							emoji: {
+								id: '1129492489020121169'
 							},
-							{
-								type: 2,
-								style: 5,
-								url: Bun.env.SUPPORT,
-								label: 'Need help?',
-								emoji: {
-									id: '1129907740265943112'
-								}
-							},
-							{
-								type: 2,
-								style: 5,
-								url: 'https://discord.gg/ee8WUaBnAY',
-								label: 'Icons!',
-								emoji: {
-									id: '1129906859705372692'
-								}
-							},
-							{
-								type: 2,
-								style: 5,
-								url: 'https://github.com/KingsBeCattz/Oceanic-HollowBot',
-								label: 'Github',
-								emoji: {
-									id: '1274235451607224320'
-								}
+							customID: 'help.delete'
+						},
+						{
+							type: 2,
+							style: 5,
+							url: Bun.env.SUPPORT,
+							label: 'Help?',
+							emoji: {
+								id: '1129907740265943112'
 							}
-						]
-					},
-					{
-						type: 1,
-						components: [{
+						},
+						{
+							type: 2,
+							style: 5,
+							url: 'https://discord.gg/ee8WUaBnAY',
+							label: 'Icons!',
+							emoji: {
+								id: '1129906859705372692'
+							}
+						},
+						{
+							type: 2,
+							style: 5,
+							url: 'https://github.com/KingsBeCattz/Oceanic-HollowBot',
+							label: 'Github',
+							emoji: {
+								id: '1274235451607224320'
+							}
+						}
+					]
+				},
+				{
+					type: 1,
+					components: [
+						{
 							type: 3,
 							customID: 'select.menu',
-							options: Object.keys(CommandTypes).map(op => ({
-								label: op,
-								value: op,
-								emoji: ctx.util.cte(op)
-							}))
-						}]
-					}
-				]
-			})
+							options: menu_options
+						}
+					]
+				}
+			]
+		});
 
-		const collector = new InteractionCollector(
-			message,
-			150000
-		);
+		const collector = new InteractionCollector(message, 150000);
 
 		collector.on('collect', async (i) => {
 			if (i.user.id !== ctx.user.id) {
@@ -209,29 +219,43 @@ export default new Command(
 				});
 			}
 
-			if (i.data.customID === 'help.delete') {
-				i.deferUpdate()
+			if (i.isButtonComponentInteraction()) {
+				i.deferUpdate();
 				return await collector.clear();
 			}
 
 			i.deferUpdate();
 
-			const commands = ctx.util.commands.filter(c => c.data.type === i.data.customID)
+			if (i.data.values[0] === 'Home')
+				return i.editFollowup(i.message.id, {
+					embeds: [embed]
+				});
+
+			const commands = ctx.util.commands.filter(
+				(c) => c.data.type === i.data.values[0]
+			);
 
 			i.editFollowup(i.message.id, {
 				embeds: [
 					{
-						title: `Category: ${i.data.customID}`,
+						title: `Category: ${i.data.values[0]}`,
 						color: message.embeds[0].color,
-						fields: commands.length === 0 ? undefined : commands.map(c => ({
-							name: `${c.data.name.capitalize()}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
-							value: c.data.description,
-							inline: true
-						})),
-						description: commands.length === 0 ? 'No commands here, come back later!' : undefined
+						fields:
+							commands.length === 0
+								? undefined
+								: commands.map((c) => ({
+										name: `${c.data.name.capitalize()}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+										value: c.data.description,
+										inline: true
+									})),
+						description:
+							commands.length === 0 ? 'No commands here, come back later!' : undefined,
+						thumbnail: {
+							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(i.data.values[0]).id}.png`
+						}
 					}
 				]
-			})
+			});
 		});
 
 		collector.on('end', async () => {
@@ -241,7 +265,7 @@ export default new Command(
 				components: ctx.util.disable_components(components)
 			});
 
-			console.log(embeds, components)
+			console.log(embeds, components);
 		});
 	}
 );

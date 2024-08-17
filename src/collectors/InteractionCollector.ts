@@ -11,10 +11,7 @@ import {
 
 export interface InteractionCollectorEvents {
 	collect: [
-		interaction: ComponentInteraction<
-			ComponentTypes.BUTTON | SelectMenuTypes,
-			AnyInteractionChannel | Uncached
-		>
+		interaction: ComponentInteraction<ComponentTypes.BUTTON, Uncached | AnyInteractionChannel> | ComponentInteraction<SelectMenuTypes, Uncached | AnyInteractionChannel>
 	];
 	end: [];
 }
