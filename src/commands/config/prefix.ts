@@ -3,7 +3,7 @@ import { Command, CommandTypes } from 'src/builders/command.builder';
 export default new Command(
 	{
 		name: 'prefix',
-		description: 'Set or get the prefix',
+		description: 'Set, Get or Reset the prefix',
 		type: CommandTypes.Configuration,
 		nsfw: false
 	},
