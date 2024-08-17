@@ -35,7 +35,7 @@ export default new Command(
 		}
 	],
 	async (ctx) => {
-		const action = ctx.subcommand(ctx.args?.shift() || 'get')?.toLowerCase();
+		const action = ctx.getsub(ctx.args?.shift() || 'get')?.toLowerCase();
 
 		const check_permission = () =>
 			ctx.send({

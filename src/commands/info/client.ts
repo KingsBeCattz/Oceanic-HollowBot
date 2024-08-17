@@ -89,7 +89,7 @@ export default new Command(
 							url: 'https://github.com/KingsBeCattz/Oceanic-HollowBot',
 							label: 'Github',
 							emoji: {
-								id: '1274172073958182962'
+								id: '1274235451607224320'
 							}
 						}
 					]

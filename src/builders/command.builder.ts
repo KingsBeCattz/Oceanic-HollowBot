@@ -11,7 +11,8 @@ export enum CommandTypes {
 	Fun = 'Fun',
 	Configuration = 'Configuration',
 	Information = 'Information',
-	Staff = 'Staff'
+	Staff = 'Staff',
+	Generic = 'Generic'
 }
 
 export class Command {

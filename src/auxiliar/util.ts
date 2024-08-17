@@ -1,6 +1,7 @@
 import { cpus } from 'node:os';
 import type { APIEmoji } from 'discord-api-types/v10';
-import type { Client, Guild } from 'oceanic.js';
+import type { ApplicationCommandOptions, Client, Guild } from 'oceanic.js';
+import { CommandTypes } from 'src/builders/command.builder';
 import { CanvaUtil } from './canva.util';
 import { CommandManager } from './command.manager';
 import { EventManager } from './event.manager';
@@ -223,5 +224,58 @@ export class Util {
 			model: cpu[0].model,
 			usage: (avgs.reduce((a, b) => a + b) / cpu.length).toFixed(decimals)
 		};
+	}
+
+	public cte(category: string): APIEmoji {
+		switch (category) {
+			case CommandTypes.Configuration:
+				return {
+					name: 'Gear',
+					id: '1129677836421189662'
+				};
+			case CommandTypes.Fun:
+				return {
+					name: 'MagicWand',
+					id: '1129670857506173031'
+				};
+			case CommandTypes.Developer:
+				return {
+					name: 'Developer',
+					id: '1129670867044020295'
+				};
+			case CommandTypes.Information:
+				return {
+					name: 'Information',
+					id: '1129672324895998002'
+				};
+			case CommandTypes.Staff:
+				return {
+					name: 'Staff',
+					id: '1274250320276488214'
+				};
+			default:
+				return {
+					name: 'Box',
+					id: '1274250845235581031'
+				};
+		}
+	}
+
+	public inspctOp(options: ApplicationCommandOptions[]) {
+		if (options[0].type === 1 || options[0].type === 2)
+			return options
+				.filter((o) => o.type === 1 || o.type === 2)
+				.map((o) => ({
+					name: o.name,
+					description: o.description,
+					type: o.type,
+					options: this.inspctOp(o.options ?? [])
+				}));
+
+		return options.map((o) => ({
+			name: o.name,
+			description: o.description,
+			type: o.type
+		}));
 	}
 }

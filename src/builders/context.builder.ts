@@ -115,10 +115,16 @@ export class Context {
 		}
 	}
 
-	public subcommand(defaultV: string) {
+	public getsub(defaultV: string) {
 		if (this.data instanceof Message) return defaultV;
 
-		return this.data.data.options.getSubCommand(false)?.pop();
+		return this.data.data.options.getSubCommand(false)?.pop() ?? defaultV;
+	}
+
+	public getgroup(defaultV: string) {
+		if (this.data instanceof Message) return defaultV;
+
+		return this.data.data.options.getSubCommand(false)?.shift() ?? defaultV;
 	}
 
 	public async profile(id: string): Promise<DSTNProfile> {
