@@ -1,5 +1,5 @@
 import { profileImage } from 'discord-arts';
-import type { Guild, Member } from 'oceanic.js';
+import type { Guild, Member, User } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command(
@@ -21,8 +21,11 @@ export default new Command(
 		}
 	],
 	async (ctx) => {
-		const member = (await ctx.util.findMember((ctx.guild as Guild).id, (await ctx.get(
-			'user') as Member)?.id ?? ctx.args?.shift())) ?? ctx.member!
+		const member =
+			(await ctx.util.findMember(
+				(ctx.guild as Guild).id,
+				((await ctx.get('user')) as User)?.id ?? ctx.args?.shift()
+			)) ?? (ctx.member as Member);
 
 		const timestamp = {
 			created: Number((member.user.createdAt.valueOf() / 1000).toFixed()),

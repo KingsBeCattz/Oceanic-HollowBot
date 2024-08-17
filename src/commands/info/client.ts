@@ -60,26 +60,40 @@ export default new Command(
 					})
 				}
 			],
-			components: [{
-				type: 1,
-				components: [{
-					type: 2,
-					style: 5,
-					url: Bun.env.SUPPORT,
-					label: 'Need help?',
-					emoji: {
-						id: '1129907740265943112'
-					}
-				}, {
-					type: 2,
-					style: 5,
-					url: 'https://discord.gg/ee8WUaBnAY',
-					label: 'Icons!',
-					emoji: {
-						id: '1129906859705372692'
-					}
-				}]
-			}]
+			components: [
+				{
+					type: 1,
+					components: [
+						{
+							type: 2,
+							style: 5,
+							url: Bun.env.SUPPORT,
+							label: 'Need help?',
+							emoji: {
+								id: '1129907740265943112'
+							}
+						},
+						{
+							type: 2,
+							style: 5,
+							url: 'https://discord.gg/ee8WUaBnAY',
+							label: 'Icons!',
+							emoji: {
+								id: '1129906859705372692'
+							}
+						},
+						{
+							type: 2,
+							style: 5,
+							url: 'https://github.com/KingsBeCattz/Oceanic-HollowBot',
+							label: 'Github',
+							emoji: {
+								id: '1274172073958182962'
+							}
+						}
+					]
+				}
+			]
 		});
 	}
 );
