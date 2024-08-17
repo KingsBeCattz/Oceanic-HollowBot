@@ -37,7 +37,7 @@ export class Util {
 
 	get random() {
 		return {
-			random(max: number, min = 0, decimals = 0): number {
+			number(max: number, min = 0, decimals = 0): number {
 				if (!max) return 0;
 				if (
 					max === 0 ||

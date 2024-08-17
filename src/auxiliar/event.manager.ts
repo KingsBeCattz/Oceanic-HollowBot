@@ -59,8 +59,11 @@ export class EventManager extends Collection<
 			}
 
 			log.info(`Events loaded:\n\t${events.join('\n\t')}`, 'EventManager.Load');
-		} catch (e) {
-			log.error(String(e), 'EventManager.Load');
+		} catch (err) {
+			log.error(
+				err instanceof Error ? err.stack ?? String(err) : String(err),
+				'EventManager.Load'
+			);
 		}
 	}
 }
