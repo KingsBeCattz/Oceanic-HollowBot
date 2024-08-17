@@ -136,7 +136,7 @@ export default new Command(
 					{
 						title: 'Welcome',
 						color: ctx.util.random.number(16777215),
-						description: `Welcome to the help menu, below in the drop down menu are categories and their commands, and if you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
+						description: `Welcome to the help menu, below in the drop down menu are categories and their commands\n\nIf you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
 					}
 				],
 				components: [
@@ -180,6 +180,18 @@ export default new Command(
 								}
 							}
 						]
+					},
+					{
+						type: 1,
+						components: [{
+							type: 3,
+							customID: 'select.menu',
+							options: Object.keys(CommandTypes).map(op => ({
+								label: op,
+								value: op,
+								emoji: ctx.util.cte(op)
+							}))
+						}]
 					}
 				]
 			})
@@ -203,6 +215,23 @@ export default new Command(
 			}
 
 			i.deferUpdate();
+
+			const commands = ctx.util.commands.filter(c => c.data.type === i.data.customID)
+
+			i.editFollowup(i.message.id, {
+				embeds: [
+					{
+						title: `Category: ${i.data.customID}`,
+						color: message.embeds[0].color,
+						fields: commands.length === 0 ? undefined : commands.map(c => ({
+							name: `${c.data.name.capitalize()}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+							value: c.data.description,
+							inline: true
+						})),
+						description: commands.length === 0 ? 'No commands here, come back later!' : undefined
+					}
+				]
+			})
 		});
 
 		collector.on('end', async () => {
