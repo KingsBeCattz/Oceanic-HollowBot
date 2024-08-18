@@ -68,7 +68,7 @@ export default new Command(
 									.flatMap((o) =>
 										o.options
 											?.filter((o) => o.type === 1)
-											.flatMap((so) => `${o.name.capitalize()} > ${so.name.capitalize()}`)
+											.flatMap((so) => `${o.name.capitalize()} ${so.name.capitalize()}`)
 									)
 									.join('\n'),
 								inline: true
@@ -84,7 +84,7 @@ export default new Command(
 											.flatMap((so) =>
 												so.options?.flatMap(
 													(soo) =>
-														`${o.name.capitalize()} > ${so.name.capitalize()} > ${soo.name.capitalize()} (${ctx.util.getOpT(soo.type)})`
+														`${o.name.capitalize()} ${so.name.capitalize()} ${soo.name.capitalize()} (${ctx.util.getOpT(soo.type)})`
 												)
 											)
 									)
@@ -110,7 +110,7 @@ export default new Command(
 									.flatMap((o) =>
 										o.options?.flatMap(
 											(so) =>
-												`${o.name.capitalize()} > ${so.name.capitalize()} (${ctx.util.getOpT(so.type)})`
+												`${o.name.capitalize()} ${so.name.capitalize()} (${ctx.util.getOpT(so.type)})`
 										)
 									)
 									.join('\n')
@@ -249,7 +249,7 @@ export default new Command(
 							.filter((scg) => scg.type === 2)
 							.flatMap((scg) =>
 								scg.options?.flatMap((sc) => ({
-									name: `${c.data.name.capitalize()} > ${scg.name.capitalize()} > ${sc.name.capitalize()}`,
+									name: `${c.data.name.capitalize()} ${scg.name.capitalize()} ${sc.name.capitalize()}`,
 									value: `${sc.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
 									inline: true
 								}))
@@ -260,7 +260,7 @@ export default new Command(
 						return c.options
 							.filter((sc) => sc.type === 1)
 							.flatMap((sc) => ({
-								name: `${c.data.name.capitalize()} > ${sc.name.capitalize()}`,
+								name: `${c.data.name.capitalize()} ${sc.name.capitalize()}`,
 								value: `${sc.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
 								inline: true
 							}));
