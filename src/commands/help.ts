@@ -209,7 +209,7 @@ export default new Command(
 			]
 		});
 
-		const collector = new InteractionCollector(message, 150000);
+		const collector = new InteractionCollector(message, ctx.client, 150000);
 
 		collector.on('collect', async (i) => {
 			if (i.user.id !== ctx.user.id) {

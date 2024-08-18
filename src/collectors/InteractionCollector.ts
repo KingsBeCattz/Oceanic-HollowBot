@@ -1,5 +1,6 @@
 import {
 	type AnyInteractionChannel,
+	type Client,
 	type ComponentInteraction,
 	type ComponentTypes,
 	type Interaction,
@@ -11,7 +12,12 @@ import {
 
 export interface InteractionCollectorEvents {
 	collect: [
-		interaction: ComponentInteraction<ComponentTypes.BUTTON, Uncached | AnyInteractionChannel> | ComponentInteraction<SelectMenuTypes, Uncached | AnyInteractionChannel>
+		interaction:
+			| ComponentInteraction<
+					ComponentTypes.BUTTON,
+					Uncached | AnyInteractionChannel
+			  >
+			| ComponentInteraction<SelectMenuTypes, Uncached | AnyInteractionChannel>
 	];
 	end: [];
 }
@@ -22,6 +28,7 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 
 	constructor(
 		public message: Message,
+		public client: Client,
 		public time: number
 	) {
 		super();
@@ -31,18 +38,18 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 			this.emit('collect', i);
 		};
 
-		message.client.on('interactionCreate', this.listener);
+		client.on('interactionCreate', this.listener);
 
 		this.timeout = setTimeout(this._clear, time);
 	}
 
 	private async _clear() {
-		this.message.client.removeListener('interactionCreate', this.listener);
-		this.emit('end')
+		this.client.removeListener('interactionCreate', this.listener);
+		this.emit('end');
 	}
 
 	async clear() {
 		clearTimeout(this.timeout);
-		await this._clear()
+		await this._clear();
 	}
 }
