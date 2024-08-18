@@ -43,7 +43,8 @@ export default new Command(
 					name: '⠇Bot Permissions',
 					value: command.permissions
 						.map((p) => `${p.capitalize()} ${ctx.util.bot_permissions_emojis(p)}`)
-						.join('\n')
+						.join('\n'),
+					inline: true
 				});
 			}
 
