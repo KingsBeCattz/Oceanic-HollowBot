@@ -116,7 +116,7 @@ export default new Command(
 						});
 				}
 			}
-			ctx.send({
+			return ctx.send({
 				embeds: [
 					{
 						title: `⠇Command: ${command.data.name.capitalize()}`,
@@ -287,13 +287,11 @@ export default new Command(
 		});
 
 		collector.on('end', async () => {
-			const { embeds, components } = message;
+			const { components } = message;
 
 			message.edit({
 				components: ctx.util.disable_components(components)
 			});
-
-			console.log(embeds, components);
 		});
 	}
 );
