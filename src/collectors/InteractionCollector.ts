@@ -38,13 +38,13 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 			this.emit('collect', i);
 		};
 
-		client.on('interactionCreate', this.listener);
+		client.addListener('interactionCreate', this.listener);
 
 		this.timeout = setTimeout(this._clear, time);
 	}
 
 	private async _clear() {
-		this.client.removeListener('interactionCreate', this.listener);
+		this.client?.removeListener('interactionCreate', this.listener);
 		this.emit('end');
 	}
 
