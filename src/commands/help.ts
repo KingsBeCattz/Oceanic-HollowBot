@@ -130,7 +130,7 @@ export default new Command(
 					{
 						title: `⠇Command: ${command.data.name.capitalize()}`,
 						color: ctx.util.random.number(16777215),
-						description: `${command.data.description} ${command.data.nsfw ? '<:Lewd:1129672128120246292>' : ''}`,
+						description: `${command.data.description}${command.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
 						thumbnail: {
 							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(command.data.type).id}.png`
 						},
@@ -249,8 +249,8 @@ export default new Command(
 							.flatMap((scg) =>
 								scg.options?.flatMap((sc) => ({
 									name: `${c.data.name.capitalize()} > ${scg.name.capitalize()} > ${sc.name.capitalize()}`,
-									value: sc.description,
-									nsfw: c.data.nsfw
+									value: `${sc.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+									inline: true
 								}))
 							);
 					}
@@ -260,15 +260,15 @@ export default new Command(
 							.filter((sc) => sc.type === 1)
 							.flatMap((sc) => ({
 								name: `${c.data.name.capitalize()} > ${sc.name.capitalize()}`,
-								value: sc.description,
-								nsfw: c.data.nsfw
+								value: `${sc.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+								inline: true
 							}));
 					}
 
 					return {
 						name: c.data.name.capitalize(),
-						value: c.data.description,
-						nsfw: c.data.nsfw
+						value: `${c.data.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+						inline: true
 					};
 				});
 
@@ -283,7 +283,7 @@ export default new Command(
 								: (commands as {
 										name: string;
 										value: string;
-										nsfw: boolean;
+										inline: boolean;
 									}[]),
 						description:
 							commands.length === 0 ? 'No commands here, come back later!' : undefined,
