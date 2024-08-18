@@ -5,7 +5,7 @@ export default new Command(
 		name: 'test',
 		description: 'test',
 		type: CommandTypes.Developer,
-		nsfw: false
+		nsfw: true
 	},
 	['developer'],
 	[],

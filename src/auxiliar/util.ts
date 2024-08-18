@@ -301,4 +301,14 @@ export class Util {
 
 		return components;
 	}
+
+	public bot_permissions_emojis(permission: string) {
+		switch (permission.toLowerCase()) {
+			case 'developer':
+				return '<:Developer:1129670867044020295>';
+
+			default:
+				return '<:Box:1274250845235581031>';
+		}
+	}
 }

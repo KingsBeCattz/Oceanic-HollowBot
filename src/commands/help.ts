@@ -38,6 +38,15 @@ export default new Command(
 					inline: true
 				});
 
+			if (command.permissions.length !== 0) {
+				fields.push({
+					name: '⠇Bot Permissions',
+					value: command.permissions
+						.map((p) => `${p.capitalize()} ${ctx.util.bot_permissions_emojis(p)}`)
+						.join('\n')
+				});
+			}
+
 			if (command.options && Boolean(command.options.length)) {
 				switch (command.options[0].type) {
 					case 2:
@@ -234,7 +243,7 @@ export default new Command(
 			const commands = ctx.util.commands
 				.filter((c) => c.data.type === i.data.values.raw[0])
 				.flatMap((c) => {
-					if (c.options[0].type === 2) {
+					if (c.options[0]?.type === 2) {
 						return c.options
 							.filter((scg) => scg.type === 2)
 							.flatMap((scg) =>
@@ -246,7 +255,7 @@ export default new Command(
 							);
 					}
 
-					if (c.options[0].type === 1) {
+					if (c.options[0]?.type === 1) {
 						return c.options
 							.filter((sc) => sc.type === 1)
 							.flatMap((sc) => ({
