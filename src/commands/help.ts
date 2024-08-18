@@ -131,7 +131,7 @@ export default new Command(
 					{
 						title: `⠇Command: ${command.data.name.capitalize()}`,
 						color: ctx.util.random.number(16777215),
-						description: `${command.data.description}${command.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+						description: `${command.data.nsfw ? '<:Lewd:1129672128120246292> ' : ''}${command.data.description}`,
 						thumbnail: {
 							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(command.data.type).id}.png`
 						},
@@ -147,11 +147,13 @@ export default new Command(
 			description: `Welcome to the help menu, below in the drop down menu are categories and their commands\n\nIf you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
 		};
 
-		const menu_options = Object.keys(CommandTypes).map((op) => ({
-			label: op,
-			value: op,
-			emoji: ctx.util.cte(op)
-		}));
+		const menu_options = Object.keys(CommandTypes)
+			.filter((op) => op !== 'Generic')
+			.map((op) => ({
+				label: op,
+				value: op,
+				emoji: ctx.util.cte(op)
+			}));
 
 		menu_options.unshift({
 			label: 'Home',
@@ -250,7 +252,7 @@ export default new Command(
 							.flatMap((scg) =>
 								scg.options?.flatMap((sc) => ({
 									name: `${c.data.name.capitalize()} ${scg.name.capitalize()} ${sc.name.capitalize()}`,
-									value: `${sc.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+									value: `${c.data.nsfw ? '<:Lewd:1129672128120246292> ' : ''}${sc.description}`,
 									inline: true
 								}))
 							);
@@ -261,14 +263,14 @@ export default new Command(
 							.filter((sc) => sc.type === 1)
 							.flatMap((sc) => ({
 								name: `${c.data.name.capitalize()} ${sc.name.capitalize()}`,
-								value: `${sc.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+								value: `${c.data.nsfw ? '<:Lewd:1129672128120246292> ' : ''}${sc.description}`,
 								inline: true
 							}));
 					}
 
 					return {
 						name: c.data.name.capitalize(),
-						value: `${c.data.description}${c.data.nsfw ? ' <:Lewd:1129672128120246292>' : ''}`,
+						value: `${c.data.nsfw ? '<:Lewd:1129672128120246292> ' : ''}${c.data.description}`,
 						inline: true
 					};
 				});
@@ -281,11 +283,15 @@ export default new Command(
 						fields:
 							commands.length === 0 || commands.some((c) => c === undefined)
 								? undefined
-								: (commands as {
-										name: string;
-										value: string;
-										inline: boolean;
-									}[]),
+								: (
+										commands as {
+											name: string;
+											value: string;
+											inline: boolean;
+										}[]
+									).sort((a, b) =>
+										a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+									),
 						description:
 							commands.length === 0 ? 'No commands here, come back later!' : undefined,
 						thumbnail: {
