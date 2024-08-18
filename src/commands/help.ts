@@ -239,7 +239,7 @@ export default new Command(
 							.filter((scg) => scg.type === 2)
 							.flatMap((scg) =>
 								scg.options?.flatMap((sc) => ({
-									name: `${c.data.name} > ${scg.name} > ${sc.name}`,
+									name: `${c.data.name.capitalize()} > ${scg.name.capitalize()} > ${sc.name.capitalize()}`,
 									value: sc.description,
 									nsfw: c.data.nsfw
 								}))
@@ -250,14 +250,14 @@ export default new Command(
 						return c.options
 							.filter((sc) => sc.type === 1)
 							.flatMap((sc) => ({
-								name: `${c.data.name} > ${sc.name}`,
+								name: `${c.data.name.capitalize()} > ${sc.name.capitalize()}`,
 								value: sc.description,
 								nsfw: c.data.nsfw
 							}));
 					}
 
 					return {
-						name: c.data.name,
+						name: c.data.name.capitalize(),
 						value: c.data.description,
 						nsfw: c.data.nsfw
 					};
