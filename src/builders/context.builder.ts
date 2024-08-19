@@ -10,8 +10,8 @@ import type {
 	User
 } from 'oceanic.js';
 import { Message } from 'oceanic.js';
-import type { Database } from 'src/auxiliar/database';
 import type { Util } from 'src/auxiliar/util';
+import type { db as Database } from 'src/index';
 import type { Command } from './command.builder';
 
 export class Context {
@@ -22,7 +22,7 @@ export class Context {
 		public data: Message | CommandInteraction,
 		public util: Util,
 		public command: Command,
-		public db: Database,
+		public db: typeof Database,
 		public args?: string[]
 	) {
 		this.guild = data.guild;

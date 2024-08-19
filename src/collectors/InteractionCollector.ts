@@ -35,7 +35,7 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 
 		this.listener = (i) => {
 			if (!i.isComponentInteraction() || i.message.id !== message.id) return;
-			this.emit('collect', i);
+			this.emit ? this.emit('collect', i) : undefined;
 		};
 
 		client.addListener('interactionCreate', this.listener);
@@ -45,7 +45,7 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 
 	private async _clear(code = 0) {
 		this.client?.removeListener('interactionCreate', this.listener);
-		this.emit('end', code);
+		this.emit ? this.emit('end', code) : undefined;
 	}
 
 	async clear(code = 0) {

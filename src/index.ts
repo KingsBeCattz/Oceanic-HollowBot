@@ -36,7 +36,7 @@ const webhook = new WebhookClient({
 
 export const util = new Util(client);
 
-export const db = new Database('./src/database', [
+export const db = new Database('./database', [
 	'main',
 	'users',
 	'guilds',

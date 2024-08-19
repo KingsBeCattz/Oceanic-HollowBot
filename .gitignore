@@ -1,4 +1,4 @@
 node_modules
 .env
 bun.lockb
-src/index.test.ts
+database
