@@ -65,7 +65,7 @@ export default new Command(
 							components: [
 								{
 									type: 6,
-									customID: 'roles.set',
+									customID: 'roles',
 									maxValues:
 										(ctx.guild as Guild).roles.size > 25
 											? 25
@@ -155,6 +155,18 @@ export default new Command(
 						collector.clear(1);
 					}
 					break;
+				case i.data.customID === 'roles':
+					{
+						if (i.isSelectMenuComponentInteraction()) {
+							await ctx.db.set(
+								'guilds',
+								`${message.guildID}.ticket.roles`,
+								i.data.values.getRoles(false).map((r) => r.id)
+							);
+							await process.edit_embed(message);
+						}
+					}
+					break;
 				case i.data.customID.startsWith('skip'):
 					{
 						if (i.data.customID.endsWith('roles')) await process.edit_embed(message);
@@ -177,6 +189,7 @@ export default new Command(
 					break;
 				case i.data.customID === 'edit':
 					{
+						i.defer();
 						await i.createModal({
 							customID: 'edit.submit',
 							title: 'Editing embed to send',
@@ -200,7 +213,7 @@ export default new Command(
 										{
 											type: 4,
 											customID: 'embed.description',
-											style: 1,
+											style: 2,
 											label: 'Description',
 											maxLength: 4096,
 											required: false
