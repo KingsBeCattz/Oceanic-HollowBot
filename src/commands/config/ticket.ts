@@ -1,4 +1,4 @@
-import type { Guild, TextChannel } from 'oceanic.js';
+import type { Guild } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
@@ -193,8 +193,7 @@ export default new Command(
 										]
 									}
 								],
-								content:
-									'Do you want to edit the embed to send?\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>'
+								content: `Do you want to edit the embed to send?\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`
 							}),
 							ctx.client,
 							5 * 60000

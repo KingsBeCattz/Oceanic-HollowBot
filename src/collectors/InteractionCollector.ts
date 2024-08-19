@@ -40,7 +40,7 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 
 		client.addListener('interactionCreate', this.listener);
 
-		this.timeout = setTimeout(this._clear, time);
+		this.timeout = setTimeout(() => this._clear(), time);
 	}
 
 	private async _clear(code = 0) {
