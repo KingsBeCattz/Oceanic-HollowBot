@@ -242,6 +242,7 @@ export default new Command(
 					break;
 				case i.data.customID === 'edit.submit': {
 					console.log(i);
+					await i.deferUpdate();
 					await process.end(message);
 				}
 			}
