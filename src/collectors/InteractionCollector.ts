@@ -40,17 +40,12 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 
 		client.addListener('interactionCreate', this.listener);
 
-		this.timeout = setTimeout(() => this._clear(), time);
-	}
-
-	private async _clear(code = 0) {
-		this.client?.removeListener('interactionCreate', this.listener);
-		this.emit ? this.emit('end', code) : undefined;
+		this.timeout = setTimeout(() => this.clear(), time);
 	}
 
 	async clear(code = 0) {
-		console.log('Cleared Timeout', this.timeout);
 		clearTimeout(this.timeout);
-		await this._clear(code);
+		this.client?.removeListener('interactionCreate', this.listener);
+		this.emit ? this.emit('end', code) : undefined;
 	}
 }
