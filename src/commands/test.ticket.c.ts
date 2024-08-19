@@ -148,14 +148,14 @@ export default new Command(
 		};
 
 		collector.on('collect', async (i) => {
+			if (i.data.customID === 'cancel') {
+				console.log('Cancel attemp');
+				await i.deferUpdate();
+				collector.clear(1);
+				return;
+			}
+
 			switch (true) {
-				case i.data.customID === 'cancel':
-					{
-						console.log('Cancel attemp');
-						await i.deferUpdate();
-						collector.clear(1);
-					}
-					break;
 				case i.data.customID.startsWith('skip'):
 					{
 						if (i.data.customID.endsWith('roles')) await process.edit_embed(message);
