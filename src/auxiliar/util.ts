@@ -117,8 +117,11 @@ export class Util {
 			log.info('All slashes loaded!', 'SLASH.LOADER');
 
 			return true;
-		} catch (e) {
-			log.error(String(e), 'SLASH.LOADER');
+		} catch (err) {
+			log.error(
+				err instanceof Error ? err.stack ?? String(err) : String(err),
+				'SLASH.LOADER'
+			);
 			return false;
 		}
 	}

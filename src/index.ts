@@ -36,7 +36,12 @@ const webhook = new WebhookClient({
 
 export const util = new Util(client);
 
-export const db = new Database('./src/database', ['main', 'users', 'guilds']);
+export const db = new Database('./src/database', [
+	'main',
+	'users',
+	'guilds',
+	'client'
+]);
 
 util.events.load('/src/events/');
 util.commands.load('/src/commands/');

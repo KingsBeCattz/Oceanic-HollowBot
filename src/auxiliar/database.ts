@@ -17,25 +17,27 @@ import { TypedEmitter } from 'oceanic.js';
 import { Open } from 'unzipper';
 import * as log from './logger';
 
-interface Events {
-	start: [db: Database];
+interface Events<T extends string> {
+	start: [db: Database<T>];
 	backup: [path: string, type: 'create' | 'use' | 'delete'];
 	get: [table: string, key?: string];
 	set: [table: string, key: string, value: JSONValue];
 }
 
-export class Database extends TypedEmitter<Events> {
+export class Database<T extends string = 'main'> extends TypedEmitter<
+	Events<T>
+> {
 	started: boolean;
 
 	constructor(
 		public path: string,
-		public tables: string[],
+		public tables: T[],
 		public backupInterval?: number
 	) {
 		super();
 		this.started = false;
 
-		if (!tables.includes('main')) tables.unshift('main');
+		if (!tables.includes('main' as T)) tables.unshift('main' as T);
 	}
 
 	public start() {

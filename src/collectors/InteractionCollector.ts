@@ -19,7 +19,7 @@ export interface InteractionCollectorEvents {
 			  >
 			| ComponentInteraction<SelectMenuTypes, Uncached | AnyInteractionChannel>
 	];
-	end: [];
+	end: [code: number];
 }
 
 export class InteractionCollector extends TypedEmitter<InteractionCollectorEvents> {
@@ -43,13 +43,13 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 		this.timeout = setTimeout(this._clear, time);
 	}
 
-	private async _clear() {
+	private async _clear(code = 0) {
 		this.client?.removeListener('interactionCreate', this.listener);
-		this.emit('end');
+		this.emit('end', code);
 	}
 
-	async clear() {
+	async clear(code = 0) {
 		clearTimeout(this.timeout);
-		await this._clear();
+		await this._clear(code);
 	}
 }
