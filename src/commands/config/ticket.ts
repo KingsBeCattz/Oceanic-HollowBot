@@ -89,7 +89,7 @@ export default new Command(
 												type: 6,
 												customID: 'role.select',
 												maxValues:
-													(ctx.guild as Guild).roles.size < 25
+													(ctx.guild as Guild).roles.size > 25
 														? 25
 														: (ctx.guild as Guild).roles.size,
 												minValues: 1
@@ -128,7 +128,8 @@ export default new Command(
 					break;
 				default: {
 					collector.message.edit({
-						components: ctx.util.disable_components(collector.message.components)
+						components: ctx.util.disable_components(collector.message.components),
+						content: collector.message.content
 					});
 				}
 			}
