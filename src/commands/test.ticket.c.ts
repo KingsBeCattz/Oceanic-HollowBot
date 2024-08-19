@@ -13,49 +13,47 @@ export default new Command(
 	[],
 	[],
 	async (ctx) => {
-		const collector = new InteractionCollector(
-			await ctx.send({
-				content: `Where you want the button to open tickets to be sent to.\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`,
-				components: [
-					{
-						type: 1,
-						components: [
-							{
-								type: 8,
-								customID: 'channel.set',
-								channelTypes: [0]
-							}
-						]
-					},
-					{
-						type: 1,
-						components: [
-							{
-								type: 2,
-								style: 2,
-								label: 'In this channel',
-								customID: 'channel.set.here',
-								emoji: {
-									id: '1137984506595397662'
-								},
-								disabled: ctx.channel?.type !== 0
+		const message = await ctx.send({
+			content: `Where you want the button to open tickets to be sent to.\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`,
+			components: [
+				{
+					type: 1,
+					components: [
+						{
+							type: 8,
+							customID: 'channel.set',
+							channelTypes: [0]
+						}
+					]
+				},
+				{
+					type: 1,
+					components: [
+						{
+							type: 2,
+							style: 2,
+							label: 'In this channel',
+							customID: 'channel.set.here',
+							emoji: {
+								id: '1137984506595397662'
 							},
-							{
-								type: 2,
-								style: 4,
-								label: 'Cancel',
-								customID: 'cancel.1',
-								emoji: {
-									id: '1274894945655717943'
-								}
+							disabled: ctx.channel?.type !== 0
+						},
+						{
+							type: 2,
+							style: 4,
+							label: 'Cancel',
+							customID: 'cancel.1',
+							emoji: {
+								id: '1274894945655717943'
 							}
-						]
-					}
-				]
-			}),
-			ctx.client,
-			5 * 60000
-		);
+						}
+					]
+				}
+			]
+		});
+
+		const collector = new InteractionCollector(message, ctx.client, 5 * 60000);
 
 		const process = {
 			async set_roles(message: Message) {
@@ -159,9 +157,8 @@ export default new Command(
 					break;
 				case i.data.customID.startsWith('skip'):
 					{
-						if (i.data.customID.endsWith('roles'))
-							await process.edit_embed(collector.message);
-						else await process.end(collector.message);
+						if (i.data.customID.endsWith('roles')) await process.edit_embed(message);
+						else await process.end(message);
 					}
 					break;
 				case i.data.customID.startsWith('channel.set'):
@@ -172,12 +169,12 @@ export default new Command(
 							'guilds',
 							`${ctx.guild?.id}.ticket.channel`,
 							i.data.customID.endsWith('here')
-								? collector.message.channelID
+								? message.channelID
 								: i.data.values.getChannels(false)[0].id
 						);
 
 						i.deferUpdate();
-						await process.set_roles(collector.message);
+						await process.set_roles(message);
 					}
 					break;
 				case i.data.customID === 'edit':
@@ -190,14 +187,14 @@ export default new Command(
 					}
 					break;
 				case i.data.customID === 'edit.submit':
-					await process.end(collector.message);
+					await process.end(message);
 			}
 		});
 
 		collector.on('end', async (code) => {
-			const { content, components } = collector.message;
+			const { content, components } = message;
 
-			collector.message.edit({
+			message.edit({
 				content: `${content.split('\n')[0]}\n-# ${code === 1 ? 'This process was closed by the author' : 'Time is running out'}`,
 				components: ctx.util.disable_components(components)
 			});
