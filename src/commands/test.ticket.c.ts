@@ -191,7 +191,12 @@ export default new Command(
 											label: 'Title',
 											maxLength: 256,
 											required: false
-										},
+										}
+									]
+								},
+								{
+									type: 1,
+									components: [
 										{
 											type: 4,
 											customID: 'embed.description',
@@ -199,7 +204,12 @@ export default new Command(
 											label: 'Description',
 											maxLength: 4096,
 											required: false
-										},
+										}
+									]
+								},
+								{
+									type: 1,
+									components: [
 										{
 											type: 4,
 											customID: 'embed.button',
