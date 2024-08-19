@@ -49,6 +49,7 @@ export class InteractionCollector extends TypedEmitter<InteractionCollectorEvent
 	}
 
 	async clear(code = 0) {
+		console.log('Cleared Timeout', this.timeout);
 		clearTimeout(this.timeout);
 		await this._clear(code);
 	}
