@@ -151,7 +151,8 @@ export default new Command(
 			switch (true) {
 				case i.data.customID === 'cancel':
 					{
-						i.deferUpdate();
+						console.log('Cancel attemp');
+						await i.deferUpdate();
 						collector.clear(1);
 					}
 					break;
@@ -192,6 +193,7 @@ export default new Command(
 		});
 
 		collector.on('end', async (code) => {
+			console.log('Collector ended');
 			const { content, components } = message;
 
 			message.edit({
