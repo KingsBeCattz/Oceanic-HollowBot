@@ -26,6 +26,20 @@ export default new Command(
 								channelTypes: [0]
 							}
 						]
+					},
+					{
+						type: 1,
+						components: [
+							{
+								type: 2,
+								style: 4,
+								customID: 'cancel',
+								label: 'Cancel',
+								emoji: {
+									id: '1274894945655717943'
+								}
+							}
+						]
 					}
 				]
 			}),
@@ -36,7 +50,6 @@ export default new Command(
 		let ch: TextChannel;
 
 		collector.on('collect', async (i) => {
-			if (!i.isSelectMenuComponentInteraction()) return;
 			if (i.user.id !== ctx.user.id) {
 				i.defer(64);
 				i.createFollowup({
@@ -44,69 +57,81 @@ export default new Command(
 				});
 			}
 
-			if (i.data.customID === 'channel.select') {
+			if (
+				i.isSelectMenuComponentInteraction() &&
+				i.data.customID === 'channel.select'
+			) {
 				ch = ctx.guild?.channels.get(
 					i.data.values.getChannels(false)[0].id
 				) as TextChannel;
+				await i.deferUpdate();
 				collector.clear(1);
+			}
+
+			if (i.isButtonComponentInteraction() && i.data.customID === 'cancel') {
+				await i.deferUpdate();
+				collector.clear(0);
 			}
 		});
 
 		collector.on('end', async (code) => {
-			if (code === 1) {
-				collector = new InteractionCollector(
-					await ctx.send({
-						content: `Select which roles can see open tickets\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`,
-						components: [
-							{
-								type: 1,
+			switch (code) {
+				case 1:
+					{
+						collector = new InteractionCollector(
+							await ctx.send({
+								content: `Select which roles can see open tickets\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`,
 								components: [
 									{
-										type: 6,
-										customID: 'role.select',
-										maxValues:
-											(ctx.guild as Guild).roles.size < 25
-												? 25
-												: (ctx.guild as Guild).roles.size,
-										minValues: 1
-									}
-								]
-							},
-							{
-								type: 1,
-								components: [
-									{
-										type: 2,
-										style: 4,
-										customID: 'cancel',
-										label: 'Cancel',
-										emoji: {
-											id: '1274894945655717943'
-										}
+										type: 1,
+										components: [
+											{
+												type: 6,
+												customID: 'role.select',
+												maxValues:
+													(ctx.guild as Guild).roles.size < 25
+														? 25
+														: (ctx.guild as Guild).roles.size,
+												minValues: 1
+											}
+										]
 									},
 									{
-										type: 2,
-										style: 2,
-										customID: 'skip',
-										label: 'Skip',
-										emoji: {
-											id: '1131479196590411807'
-										}
+										type: 1,
+										components: [
+											{
+												type: 2,
+												style: 4,
+												customID: 'cancel',
+												label: 'Cancel',
+												emoji: {
+													id: '1274894945655717943'
+												}
+											},
+											{
+												type: 2,
+												style: 2,
+												customID: 'skip',
+												label: 'Skip',
+												emoji: {
+													id: '1131479196590411807'
+												}
+											}
+										]
 									}
 								]
-							}
-						]
-					}),
-					ctx.client,
-					5 * 60000
-				);
-
-				return;
+							}),
+							ctx.client,
+							5 * 60000
+						);
+					}
+					break;
+				default: {
+					collector.message.edit({
+						components: ctx.util.disable_components(collector.message.components)
+					});
+				}
 			}
-
-			collector.message.edit({
-				components: ctx.util.disable_components(collector.message.components)
-			});
 		});
 	}
 );
