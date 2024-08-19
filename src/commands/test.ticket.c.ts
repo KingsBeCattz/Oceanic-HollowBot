@@ -43,7 +43,7 @@ export default new Command(
 							type: 2,
 							style: 4,
 							label: 'Cancel',
-							customID: 'cancel.1',
+							customID: 'cancel',
 							emoji: {
 								id: '1274894945655717943'
 							}
@@ -148,15 +148,13 @@ export default new Command(
 		};
 
 		collector.on('collect', async (i) => {
-			console.log(i.data.customID);
-			if (i.data.customID === 'cancel') {
-				console.log('Cancel attemp');
-				await i.deferUpdate();
-				collector.clear(1);
-				return;
-			}
-
 			switch (true) {
+				case i.data.customID === 'cancel':
+					{
+						await i.deferUpdate();
+						collector.clear(1);
+					}
+					break;
 				case i.data.customID.startsWith('skip'):
 					{
 						if (i.data.customID.endsWith('roles')) await process.edit_embed(message);
@@ -179,15 +177,47 @@ export default new Command(
 					break;
 				case i.data.customID === 'edit':
 					{
-						i.createModal({
+						await i.createModal({
 							customID: 'edit.submit',
 							title: 'Editing embed to send',
-							components: []
+							components: [
+								{
+									type: 1,
+									components: [
+										{
+											type: 4,
+											customID: 'embed.title',
+											style: 1,
+											label: 'Title',
+											maxLength: 256,
+											required: false
+										},
+										{
+											type: 4,
+											customID: 'embed.description',
+											style: 1,
+											label: 'Description',
+											maxLength: 4096,
+											required: false
+										},
+										{
+											type: 4,
+											customID: 'embed.button',
+											style: 1,
+											label: 'Button text',
+											maxLength: 80,
+											required: false
+										}
+									]
+								}
+							]
 						});
 					}
 					break;
-				case i.data.customID === 'edit.submit':
+				case i.data.customID === 'edit.submit': {
+					console.log(i);
 					await process.end(message);
+				}
 			}
 		});
 
