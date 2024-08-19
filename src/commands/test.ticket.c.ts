@@ -164,14 +164,12 @@ export default new Command(
 					break;
 				case i.data.customID.startsWith('channel.set'):
 					{
-						if (!i.isSelectMenuComponentInteraction()) return;
-
 						await ctx.db.set(
 							'guilds',
 							`${ctx.guild?.id}.ticket.channel`,
-							i.data.customID.endsWith('here')
-								? message.channelID
-								: i.data.values.getChannels(false)[0].id
+							i.isSelectMenuComponentInteraction()
+								? i.data.values.getChannels(false)[0].id
+								: message.channelID
 						);
 
 						i.deferUpdate();
@@ -193,7 +191,6 @@ export default new Command(
 		});
 
 		collector.on('end', async (code) => {
-			console.log('Collector ended');
 			const { content, components } = message;
 
 			message.edit({
