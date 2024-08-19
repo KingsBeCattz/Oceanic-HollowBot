@@ -79,7 +79,7 @@ export default new Command(
 				case 1:
 					{
 						collector = new InteractionCollector(
-							await ctx.send({
+							await collector.message.edit({
 								content: `Select which roles can see open tickets\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`,
 								components: [
 									{
