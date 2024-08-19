@@ -64,7 +64,10 @@ export default new Command(
 									{
 										type: 6,
 										customID: 'role.select',
-										maxValues: (ctx.guild as Guild).roles.size,
+										maxValues:
+											(ctx.guild as Guild).roles.size < 25
+												? 25
+												: (ctx.guild as Guild).roles.size,
 										minValues: 1
 									}
 								]
