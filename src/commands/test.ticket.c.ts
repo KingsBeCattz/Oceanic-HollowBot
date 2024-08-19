@@ -163,6 +163,7 @@ export default new Command(
 								`${message.guildID}.ticket.roles`,
 								i.data.values.getRoles(false).map((r) => r.id)
 							);
+							await i.deferUpdate();
 							await process.edit_embed(message);
 						}
 					}
@@ -189,7 +190,6 @@ export default new Command(
 					break;
 				case i.data.customID === 'edit':
 					{
-						i.defer();
 						await i.createModal({
 							customID: 'edit.submit',
 							title: 'Editing embed to send',
@@ -203,6 +203,7 @@ export default new Command(
 											style: 1,
 											label: 'Title',
 											maxLength: 256,
+											minLength: 1,
 											required: false
 										}
 									]
@@ -215,7 +216,8 @@ export default new Command(
 											customID: 'embed.description',
 											style: 2,
 											label: 'Description',
-											maxLength: 4096,
+											maxLength: 4000,
+											minLength: 1,
 											required: false
 										}
 									]
@@ -229,6 +231,7 @@ export default new Command(
 											style: 1,
 											label: 'Button text',
 											maxLength: 80,
+											minLength: 1,
 											required: false
 										}
 									]
