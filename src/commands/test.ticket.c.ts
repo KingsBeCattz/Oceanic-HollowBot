@@ -148,6 +148,7 @@ export default new Command(
 		};
 
 		collector.on('collect', async (i) => {
+			console.log(i.data.customID);
 			if (i.data.customID === 'cancel') {
 				console.log('Cancel attemp');
 				await i.deferUpdate();
