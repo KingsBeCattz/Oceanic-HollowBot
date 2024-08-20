@@ -224,11 +224,7 @@ export default new Command(
 			]
 		});
 
-		const collector = new InteractionCollector(
-			message,
-			ctx.client,
-			Date.now() - now
-		);
+		const collector = new InteractionCollector(message, ctx.client, 5 * 60000);
 
 		collector.on('collect', async (i) => {
 			if (i.user.id !== ctx.user.id) {
