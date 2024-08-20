@@ -33,7 +33,7 @@ export default new Command(
 						},
 						{
 							name: '⠇Host⠸',
-							value: `**⠐ CPU model**:\n${ctx.util.cpu().model}\n**⠐ CPU usage**: ${ctx.util.cpu().usage}%\n**⠐ Ping**: ${ctx.util.ping()}ms`,
+							value: `**⠐ CPU model**:\n${ctx.util.cpu().model}\n**⠐ CPU usage**: ${ctx.util.cpu().usage}%\n-**⠐ RAM usage**: ${(process.memoryUsage.rss() / 2 ** 20).toFixed(2)}MiB\n**⠐ Ping**: ${ctx.util.ping()}ms`,
 							inline: true
 						},
 						{
