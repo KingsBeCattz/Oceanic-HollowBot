@@ -164,7 +164,10 @@ export default new Command(
 			}
 		});
 
+		const now = Date.now() + 5 * 60000;
+
 		const message = await ctx.send({
+			content: `-# This menu closes <t:${(now / 1000).toFixed()}:R>`,
 			embeds: [embed],
 			components: [
 				{
@@ -221,7 +224,11 @@ export default new Command(
 			]
 		});
 
-		const collector = new InteractionCollector(message, ctx.client, 150000);
+		const collector = new InteractionCollector(
+			message,
+			ctx.client,
+			Date.now() - now
+		);
 
 		collector.on('collect', async (i) => {
 			if (i.user.id !== ctx.user.id) {
@@ -306,7 +313,8 @@ export default new Command(
 			const { components } = message;
 
 			message.edit({
-				components: ctx.util.disable_components(components)
+				components: ctx.util.disable_components(components),
+				content: ''
 			});
 		});
 	}
