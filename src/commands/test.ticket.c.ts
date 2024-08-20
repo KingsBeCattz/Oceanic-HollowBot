@@ -1,4 +1,9 @@
-import type { Guild, Message } from 'oceanic.js';
+import type {
+	AnyTextableGuildChannel,
+	Guild,
+	Message,
+	MessageComponent
+} from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
@@ -28,7 +33,21 @@ export default new Command(
 				},
 				{
 					type: 1,
-					components: [
+					components: (
+						((await ctx.db.exists('guilds', `${ctx.guild?.id}.tickets.channel`))
+							? [
+									{
+										type: 2,
+										style: 2,
+										label: 'Skip',
+										customID: 'skip.channel',
+										emoji: {
+											id: '1275191659969384489'
+										}
+									}
+								]
+							: []) as MessageComponent[]
+					).concat([
 						{
 							type: 2,
 							style: 2,
@@ -48,29 +67,55 @@ export default new Command(
 								id: '1274894945655717943'
 							}
 						}
-					]
+					])
 				}
 			]
 		});
+
+		const current_roles =
+			((await ctx.db.get(
+				'guilds',
+				`${ctx.guild?.id}.ticket.roles`
+			)) as string[]) ?? [];
 
 		const collector = new InteractionCollector(message, ctx.client, 5 * 60000);
 
 		const process = {
 			async set_roles(message: Message) {
+				const roles = (ctx.guild as Guild).roles
+					.filter(async (r) => !r.permissions.has(8n))
+					.filter(
+						async (r) =>
+							!(
+								((await ctx.db.get(
+									'guilds',
+									`${ctx.data.guildID}.ticket.roles`
+								)) as string[]) ?? []
+							).includes(r.id)
+					)
+					.filter((r) => !r.managed)
+					.filter((r) => r.id !== ctx.data.guildID)
+					.slice(0, 24);
 				return await message.edit({
-					content: `Choose the roles that will see open tickets.\n${message.content.split('\n')[1]}`,
+					content: `Choose the roles that will see open tickets. **If you select a role that was already included, it will be deleted.**\n${message.content.split('\n')[1]}`,
 					components: [
 						{
 							type: 1,
 							components: [
 								{
-									type: 6,
+									type: 3,
 									customID: 'roles',
-									maxValues:
-										(ctx.guild as Guild).roles.size > 25
-											? 25
-											: (ctx.guild as Guild).roles.size,
-									minValues: 1
+									maxValues: roles.length,
+									minValues: 1,
+									options: roles.map((r) => ({
+										value: r.id,
+										label: r.name,
+										emoji: {
+											id: current_roles.includes(r.id)
+												? '1275290587712585828'
+												: '1275290555848589343'
+										}
+									}))
 								}
 							]
 						},
@@ -96,6 +141,60 @@ export default new Command(
 									}
 								}
 							]
+						}
+					]
+				});
+			},
+			async set_category(message: Message) {
+				return await message.edit({
+					content: `In which category do you want the tickets to be created?\n${message.content.split('\n')[1]}`,
+					components: [
+						{
+							type: 1,
+							components: [
+								{
+									type: 8,
+									customID: 'category.set',
+									channelTypes: [4]
+								}
+							]
+						},
+						{
+							type: 1,
+							components: (
+								((await ctx.db.exists('guilds', `${ctx.guild?.id}.tickets.category`))
+									? [
+											{
+												type: 2,
+												style: 2,
+												label: 'Skip',
+												customID: 'skip.category',
+												emoji: {
+													id: '1275191659969384489'
+												}
+											}
+										]
+									: []) as MessageComponent[]
+							).concat([
+								{
+									type: 2,
+									style: 2,
+									label: 'In this category',
+									customID: 'category.set.here',
+									emoji: {
+										id: '1137984506595397662'
+									}
+								},
+								{
+									type: 2,
+									style: 4,
+									label: 'Cancel',
+									customID: 'cancel',
+									emoji: {
+										id: '1274894945655717943'
+									}
+								}
+							])
 						}
 					]
 				});
@@ -155,23 +254,22 @@ export default new Command(
 						collector.clear(1);
 					}
 					break;
-				case i.data.customID === 'roles':
-					{
-						if (i.isSelectMenuComponentInteraction()) {
-							await ctx.db.set(
-								'guilds',
-								`${message.guildID}.ticket.roles`,
-								i.data.values.getRoles(false).map((r) => r.id)
-							);
-							await i.deferUpdate();
-							await process.edit_embed(message);
-						}
-					}
-					break;
 				case i.data.customID.startsWith('skip'):
 					{
-						if (i.data.customID.endsWith('roles')) await process.edit_embed(message);
-						else await process.end(message);
+						switch (true) {
+							case i.data.customID.endsWith('channel'):
+								await process.set_category(message);
+								break;
+							case i.data.customID.endsWith('category'):
+								await process.set_roles(message);
+								break;
+							case i.data.customID.endsWith('roles'):
+								await process.edit_embed(message);
+								break;
+							case i.data.customID.endsWith('embed'):
+								await process.end(message);
+								break;
+						}
 					}
 					break;
 				case i.data.customID.startsWith('channel.set'):
@@ -185,7 +283,33 @@ export default new Command(
 						);
 
 						i.deferUpdate();
+						await process.set_category(message);
+					}
+					break;
+				case i.data.customID.startsWith('category.set'):
+					{
+						const category = i.isSelectMenuComponentInteraction()
+							? i.data.values.getChannels(false)[0].id
+							: (message.channel as AnyTextableGuildChannel).parentID;
+
+						if (category)
+							await ctx.db.set('guilds', `${ctx.guild?.id}.ticket.category`, category);
+
+						i.deferUpdate();
 						await process.set_roles(message);
+					}
+					break;
+				case i.data.customID === 'roles':
+					{
+						if (i.isSelectMenuComponentInteraction()) {
+							await ctx.db.set(
+								'guilds',
+								`${message.guildID}.ticket.roles`,
+								i.data.values.raw.filter((rid) => !current_roles.includes(rid))
+							);
+							await i.deferUpdate();
+							await process.edit_embed(message);
+						}
 					}
 					break;
 				case i.data.customID === 'edit':
@@ -240,11 +364,6 @@ export default new Command(
 						});
 					}
 					break;
-				case i.data.customID === 'edit.submit': {
-					console.log(i);
-					await i.deferUpdate();
-					await process.end(message);
-				}
 			}
 		});
 
