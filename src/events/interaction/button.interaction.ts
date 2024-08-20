@@ -58,7 +58,7 @@ export default new Event('interactionCreate', async (i) => {
 		case 'delete.ticket': {
 			i.defer();
 			setTimeout(() => i.channel?.delete(), 5_000);
-			i.editOriginal({
+			i.message.edit({
 				components: util.disable_components(i.message.components)
 			});
 			i.createFollowup({
