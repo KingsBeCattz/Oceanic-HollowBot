@@ -305,11 +305,7 @@ export default new Command(
 
 		const current_roles = ticket_data.roles ?? [];
 
-		const collector = new InteractionCollector(
-			message,
-			ctx.client,
-			Date.now() - time
-		);
+		const collector = new InteractionCollector(message, ctx.client, 5 * 60000);
 
 		collector.on('collect', async (i) => {
 			switch (true) {
