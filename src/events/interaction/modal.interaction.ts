@@ -125,13 +125,14 @@ export default new Event('interactionCreate', async (i) => {
 					content: `Your ticket was created at <#${ticket.id}>.`
 				});
 
-				console.log(textinputs, textinputs[0].value);
-
 				ticket.createMessage({
 					embeds: [
 						{
 							title,
-							description: textinputs[0].value ?? 'No reason given for the ticket',
+							description:
+								textinputs[0].value === ''
+									? 'No reason given for the ticket'
+									: textinputs[0].value,
 							color: util.random.number(16777215),
 							thumbnail: {
 								url: i.client.util.formatImage(
