@@ -47,7 +47,7 @@ export default [
 
 			if ((await command.perms(ctx)).some((v) => !v)) return;
 
-			command.code(ctx);
+			await command.code(ctx);
 		} catch (e) {
 			log.error(String(e), `Command: ${command.data.name}`);
 		}

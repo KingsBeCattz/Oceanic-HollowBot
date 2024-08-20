@@ -141,7 +141,7 @@ export default new Command(
 		components.unshift({
 			type: 2,
 			style: 4,
-			customID: 'delete.private',
+			customID: 'delete.eval.private',
 			label: 'Delete',
 			emoji: {
 				id: '1129492489020121169'

@@ -241,23 +241,23 @@ export class Database<T extends string = 'main'> extends TypedEmitter<
 		return typeof value;
 	}
 
-	public async get(
+	public async get<T extends JSONValue = JSONValue>(
 		table: (typeof this.tables)[number]
-	): Promise<JSONObject | null>;
-	public async get(
+	): Promise<T | null>;
+	public async get<T extends JSONValue = JSONValue>(
 		table: (typeof this.tables)[number],
 		key: string
-	): Promise<JSONValue | null>;
-	public async get(
+	): Promise<T | null>;
+	public async get<T extends JSONValue = JSONValue>(
 		table: (typeof this.tables)[number],
 		key?: string
-	): Promise<JSONObject | JSONValue | null> {
+	): Promise<T | null> {
 		if (!this.started) {
 			log.warn(
 				'You must initialize the database! Use the .start() method',
 				'Database.CREATE_BACKUP()'
 			);
-			return false;
+			return false as T;
 		}
 		if (!table) {
 			log.error('You must give a table', 'DATABASE.GET()');
@@ -273,7 +273,7 @@ export class Database<T extends string = 'main'> extends TypedEmitter<
 			return null;
 		}
 
-		const data: JSONObject = JSON.parse(readFileSync(path).toString());
+		const data = JSON.parse(readFileSync(path).toString());
 
 		if (!key) {
 			this.emit('get', table);
@@ -370,7 +370,7 @@ export class Database<T extends string = 'main'> extends TypedEmitter<
 				return true;
 			}
 
-			const data = (await this.get(table)) || {};
+			const data = (await this.get<JSONObject>(table)) || {};
 			unset(data, key);
 
 			this.insert(table, data);
