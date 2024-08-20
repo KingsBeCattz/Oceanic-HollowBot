@@ -6,12 +6,13 @@ export default new Event('interactionCreate', async (i) => {
 
 	const _id = i.data.customID.toLowerCase().split('.');
 	console.log('_id', _id);
-	let _private = _id.pop();
+	let _private = _id.pop() ?? '';
 	console.log('_private', _private);
-	if (!['private', 'public'].includes(_private ?? '')) {
-		_id.push(_private ?? '');
+	if (!['private', 'public'].includes(_private)) {
+		_id.push(_private);
 		_private = 'private';
 	}
+	console.log('new _id', _id);
 	console.log('new _private', _private);
 
 	const data = {
