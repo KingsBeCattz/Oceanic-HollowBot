@@ -125,6 +125,8 @@ export default new Event('interactionCreate', async (i) => {
 					content: `Your ticket was created at <#${ticket.id}>.`
 				});
 
+				console.log(textinputs, textinputs[0].value);
+
 				ticket.createMessage({
 					embeds: [
 						{
