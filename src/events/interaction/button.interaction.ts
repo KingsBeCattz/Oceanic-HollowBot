@@ -10,7 +10,7 @@ export default new Event('interactionCreate', async (i) => {
 	console.log('_private', _private);
 	if (!['private', 'public'].includes(_private)) {
 		_id.push(_private);
-		_private = 'private';
+		_private = 'public';
 	}
 	console.log('new _id', _id);
 	console.log('new _private', _private);
