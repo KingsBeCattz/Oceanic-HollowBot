@@ -18,69 +18,69 @@ export default new Command(
 	[],
 	[],
 	async (ctx) => {
-		const message = await ctx.send({
-			content: `Where you want the button to open tickets to be sent to.\n-# This interaction will close <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`,
-			components: [
-				{
-					type: 1,
-					components: [
-						{
-							type: 8,
-							customID: 'channel.set',
-							channelTypes: [0]
-						}
-					]
-				},
-				{
-					type: 1,
-					components: (
-						((await ctx.db.exists('guilds', `${ctx.guild?.id}.tickets.channel`))
-							? [
-									{
-										type: 2,
-										style: 2,
-										label: 'Skip',
-										customID: 'skip.channel',
-										emoji: {
-											id: '1275191659969384489'
-										}
-									}
-								]
-							: []) as MessageComponent[]
-					).concat([
-						{
-							type: 2,
-							style: 2,
-							label: 'In this channel',
-							customID: 'channel.set.here',
-							emoji: {
-								id: '1137984506595397662'
-							},
-							disabled: ctx.channel?.type !== 0
-						},
-						{
-							type: 2,
-							style: 4,
-							label: 'Cancel',
-							customID: 'cancel',
-							emoji: {
-								id: '1274894945655717943'
-							}
-						}
-					])
-				}
-			]
-		});
+		if (!ctx.member?.permissions.has(32n))
+			return ctx.send({
+				content:
+					'You need the `Manage guild` permission.\n-# If you have the `Administrator` permission you should be able to, if you have the permission and you cannot use this command login to the support server to report the problem.',
+				flags: 64
+			});
 
-		const current_roles =
-			((await ctx.db.get(
-				'guilds',
-				`${ctx.guild?.id}.ticket.roles`
-			)) as string[]) ?? [];
-
-		const collector = new InteractionCollector(message, ctx.client, 5 * 60000);
+		const time = Number((Date.now() / 1000).toFixed()) + 5 * 60;
 
 		const process = {
+			start_options: {
+				content: `Where you want the button to open tickets to be sent to.\n-# This interaction will close <t:${time}:R>`,
+				components: [
+					{
+						type: 1,
+						components: [
+							{
+								type: 8,
+								customID: 'channel.set',
+								channelTypes: [0]
+							}
+						]
+					},
+					{
+						type: 1,
+						components: (
+							((await ctx.db.exists('guilds', `${ctx.guild?.id}.tickets.channel`))
+								? [
+										{
+											type: 2,
+											style: 2,
+											label: 'Skip',
+											customID: 'skip.channel',
+											emoji: {
+												id: '1275191659969384489'
+											}
+										}
+									]
+								: []) as MessageComponent[]
+						).concat([
+							{
+								type: 2,
+								style: 2,
+								label: 'In this channel',
+								customID: 'channel.set.here',
+								emoji: {
+									id: '1137984506595397662'
+								},
+								disabled: ctx.channel?.type !== 0
+							},
+							{
+								type: 2,
+								style: 4,
+								label: 'Cancel',
+								customID: 'cancel',
+								emoji: {
+									id: '1274894945655717943'
+								}
+							}
+						])
+					}
+				]
+			},
 			async set_roles(message: Message) {
 				const roles = (ctx.guild as Guild).roles
 					.filter(async (r) => !r.permissions.has(8n))
@@ -245,9 +245,107 @@ export default new Command(
 				});
 			}
 		};
+		const message = await ((await ctx.db.exists(
+			'guilds',
+			`${ctx.guild?.id}.ticket`
+		))
+			? ctx.send({
+					content: `The ticket system is already configured, do you want to resend the button or reconfigure it?\n-# This interaction will close <t:${time}:R>`,
+					components: [
+						{
+							type: 1,
+							components: [
+								{
+									type: 2,
+									style: 2,
+									label: 'Resend',
+									customID: 'resend',
+									emoji: { id: '1275306176615284777' }
+								},
+								{
+									type: 2,
+									style: 2,
+									label: 'Reconfigure',
+									customID: 'reconfigure',
+									emoji: { id: '1129677836421189662' }
+								}
+							]
+						}
+					]
+				})
+			: ctx.send(process.start_options));
+
+		const current_roles =
+			((await ctx.db.get(
+				'guilds',
+				`${ctx.guild?.id}.ticket.roles`
+			)) as string[]) ?? [];
+
+		const collector = new InteractionCollector(
+			message,
+			ctx.client,
+			Date.now() - time
+		);
 
 		collector.on('collect', async (i) => {
 			switch (true) {
+				case i.data.customID === 'resend':
+					{
+						const ticket_data =
+							((await ctx.db.get('guilds', `${i.message?.guildID}.ticket`)) as {
+								channel?: string;
+								embed?: { title?: string; description?: string; button?: string };
+							}) ?? {};
+
+						await i.deferUpdate();
+						await message.edit({
+							content: `Process completed, check <#${ticket_data.channel ?? i.channelID}>.`,
+							components: []
+						});
+
+						await i.client.rest.channels.createMessage(
+							ticket_data.channel ?? i.channelID,
+							{
+								embeds: [
+									{
+										color: 4100702,
+										title:
+											ticket_data.embed?.title ?? 'Welcome to the ticket creation process',
+										description:
+											ticket_data.embed?.description ??
+											'Before creating a ticket make sure that you do not violate any server rule; do not create a ticket for no reason or tag staff unnecessarily, as this may lead to a penalty.',
+										thumbnail: {
+											url: 'https://cdn.discordapp.com/emojis/1129907740265943112.png'
+										}
+									}
+								],
+								components: [
+									{
+										type: 1,
+										components: [
+											{
+												type: 2,
+												label: ticket_data.embed?.button ?? 'Create ticket',
+												customID: 'create.ticket',
+												emoji: {
+													id: '1244527037008576612'
+												},
+												style: 2
+											}
+										]
+									}
+								]
+							}
+						);
+					}
+					break;
+				case i.data.customID === 'reconfigure':
+					{
+						await i.deferUpdate();
+						message.edit(process.start_options);
+					}
+					break;
+
 				case i.data.customID === 'cancel':
 					{
 						await i.deferUpdate();
@@ -302,11 +400,10 @@ export default new Command(
 				case i.data.customID === 'roles':
 					{
 						if (i.isSelectMenuComponentInteraction()) {
-							await ctx.db.set(
-								'guilds',
-								`${message.guildID}.ticket.roles`,
-								i.data.values.raw.filter((rid) => !current_roles.includes(rid))
-							);
+							await ctx.db.set('guilds', `${message.guildID}.ticket.roles`, [
+								...i.data.values.raw.filter((rid) => !current_roles.includes(rid)),
+								...current_roles.filter((rid) => !i.data.values.raw.includes(rid))
+							]);
 							await i.deferUpdate();
 							await process.edit_embed(message);
 						}

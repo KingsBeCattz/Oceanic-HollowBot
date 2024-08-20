@@ -1,4 +1,4 @@
-import { util, db } from 'src';
+import { db } from 'src';
 import { Event } from 'src/builders/event.builder';
 
 export default new Event('interactionCreate', async (i) => {
@@ -33,11 +33,14 @@ export default new Event('interactionCreate', async (i) => {
 	i.client.rest.channels.createMessage(ticket_data.channel ?? i.channelID, {
 		embeds: [
 			{
-				color: util.random.number(16777215),
+				color: 4100702,
 				title: ticket_data.embed?.title ?? 'Welcome to the ticket creation process',
 				description:
 					ticket_data.embed?.description ??
-					'Before creating a ticket make sure that you do not violate any server rule; do not create a ticket for no reason or tag staff unnecessarily, as this may lead to a penalty.'
+					'Before creating a ticket make sure that you do not violate any server rule; do not create a ticket for no reason or tag staff unnecessarily, as this may lead to a penalty.',
+				thumbnail: {
+					url: 'https://cdn.discordapp.com/emojis/1129907740265943112.png'
+				}
 			}
 		],
 		components: [
@@ -51,7 +54,7 @@ export default new Event('interactionCreate', async (i) => {
 						emoji: {
 							id: '1244527037008576612'
 						},
-						style: 3
+						style: 2
 					}
 				]
 			}
