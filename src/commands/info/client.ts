@@ -57,7 +57,7 @@ export default new Command(
 							? 'phone'
 							: ctx.guild?.clientMember.presence?.status,
 						customTag: 'An awesome bot!',
-						customDate: 'Hello from Mexico!'
+						customDate: 'Hello from Mexicali'
 					})
 				}
 			],
