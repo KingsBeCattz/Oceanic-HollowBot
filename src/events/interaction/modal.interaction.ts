@@ -88,7 +88,7 @@ export default new Event('interactionCreate', async (i) => {
 					ch.name.startsWith(i.user.username)
 				).length;
 
-				const title = `${i.user.username}'s ticket${tickets_created ? `${tickets_created + 1}` : ''})`;
+				const title = `${i.user.username}\'s ticket${tickets_created ? ` (${tickets_created + 1})` : ''}`;
 
 				const ticket = await i.client.rest.guilds.createChannel(
 					i.guildID ?? '',
@@ -120,6 +120,11 @@ export default new Event('interactionCreate', async (i) => {
 					}
 				);
 
+				await i.defer(64);
+				await i.createFollowup({
+					content: `Your ticket was created at <#${ticket.id}>.`
+				});
+
 				ticket.createMessage({
 					embeds: [
 						{
@@ -144,7 +149,10 @@ export default new Event('interactionCreate', async (i) => {
 									type: 2,
 									style: 4,
 									customID: 'delete.ticket',
-									label: 'Delete Channel'
+									label: 'Delete Ticket',
+									emoji: {
+										id: '1129492489020121169'
+									}
 								}
 							]
 						}
