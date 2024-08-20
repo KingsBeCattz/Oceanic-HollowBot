@@ -1,4 +1,5 @@
 import type { AnyTextableChannel } from 'oceanic.js';
+import { util } from 'src';
 import { Event } from 'src/builders/event.builder';
 
 export default new Event('interactionCreate', async (i) => {
@@ -62,6 +63,9 @@ export default new Event('interactionCreate', async (i) => {
 		case 'delete.ticket': {
 			i.defer();
 			setTimeout(() => i.channel?.delete(), 5_000);
+			i.editOriginal({
+				components: util.disable_components(i.message.components)
+			});
 			i.createFollowup({
 				content: `This channel will be deleted <t:${Number((Date.now() / 1000).toFixed()) + 5}:R>`
 			});
