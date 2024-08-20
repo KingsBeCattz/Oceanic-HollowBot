@@ -61,9 +61,9 @@ export default new Event('interactionCreate', async (i) => {
 			break;
 		case 'delete.ticket': {
 			i.defer();
-			setTimeout(() => i.channel?.delete(), 5 * 60_000);
+			setTimeout(() => i.channel?.delete(), 5_000);
 			i.createFollowup({
-				content: `This channel will be deleted <t:${Number((Date.now() / 1000).toFixed()) + 5 * 60}:R>`
+				content: `This channel will be deleted <t:${Number((Date.now() / 1000).toFixed()) + 5}:R>`
 			});
 		}
 	}
