@@ -6,26 +6,23 @@ export default new Event('interactionCreate', async (i) => {
 	if (!i.isModalSubmitInteraction()) return;
 	const textinputs = i.data.components.raw.flatMap((c) => c.components);
 
-	switch (i.data.customID) {
-		case 'edit.submit':
+	switch (true) {
+		case i.data.customID === 'edit.submit':
 			{
 				for (const textinput of textinputs) {
 					if (!textinput.value) {
-						await db.delete(
-							'guilds',
-							`${i.message?.guildID}.ticket.${textinput.customID}`
-						);
+						await db.delete('guilds', `${i.guildID}.ticket.${textinput.customID}`);
 						continue;
 					}
 					await db.set(
 						'guilds',
-						`${i.message?.guildID}.ticket.${textinput.customID}`,
+						`${i.guildID}.ticket.${textinput.customID}`,
 						textinput.value
 					);
 				}
 
 				const ticket_data =
-					((await db.get('guilds', `${i.message?.guildID}.ticket`)) as {
+					((await db.get('guilds', `${i.guildID}.ticket`)) as {
 						channel?: string;
 						embed?: { title?: string; description?: string; button?: string };
 					}) ?? {};
@@ -69,7 +66,7 @@ export default new Event('interactionCreate', async (i) => {
 				});
 			}
 			break;
-		case 'open.ticket':
+		case i.data.customID === 'open.ticket':
 			{
 				const allow_roles = ((await db.get(
 					'guilds',
@@ -161,6 +158,66 @@ export default new Event('interactionCreate', async (i) => {
 						}
 					]
 				});
+			}
+			break;
+
+		case /^embed.*(welcomes|firewells|bans)$/.test(i.data.customID):
+			{
+				const type = i.data.customID.split('.')[1] as
+					| 'welcomes'
+					| 'firewells'
+					| 'bans';
+
+				for (const textinput of textinputs) {
+					if (!textinput.value) {
+						await db.delete('guilds', `${i.guildID}.${type}.${textinput.customID}`);
+						continue;
+					}
+					await db.set(
+						'guilds',
+						`${i.guildID}.${type}.${textinput.customID}`,
+						textinput.value
+					);
+
+					await i.deferUpdate();
+					i.editOriginal({
+						content: 'The configuration has been done successfully!',
+						components: [
+							{
+								type: 1,
+								components: [
+									{
+										type: 2,
+										style: 2,
+										label: 'Go back',
+										customID: 'back',
+										emoji: {
+											id: '1275191799065088133'
+										}
+									},
+									{
+										type: 2,
+										style: 2,
+										label: 'Preview',
+										customID: `preview.${type}`,
+										emoji: {
+											id: '1129498662272245800'
+										}
+									},
+									{
+										type: 2,
+										style: 4,
+										label: 'Close',
+										customID: 'close',
+										emoji: {
+											id: '1274894945655717943'
+										}
+									}
+								]
+							}
+						]
+					});
+				}
 			}
 			break;
 	}
