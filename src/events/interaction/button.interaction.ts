@@ -6,15 +6,11 @@ export default new Event('interactionCreate', async (i) => {
 	if (!i.isComponentInteraction() || !i.isButtonComponentInteraction()) return;
 
 	const _id = i.data.customID.toLowerCase().split('.');
-	console.log('_id', _id);
 	let _private = _id.pop() ?? '';
-	console.log('_private', _private);
 	if (!['private', 'public'].includes(_private)) {
 		_id.push(_private);
 		_private = 'public';
 	}
-	console.log('new _id', _id);
-	console.log('new _private', _private);
 
 	const data = {
 		private: _private === 'private',
@@ -25,7 +21,6 @@ export default new Event('interactionCreate', async (i) => {
 				)
 			: undefined
 	};
-	console.log('data', data);
 
 	if (data.private && i.user.id !== data.reference?.author.id) {
 		i.defer(64);
