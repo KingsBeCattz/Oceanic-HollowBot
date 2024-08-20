@@ -339,6 +339,7 @@ export default new Command(
 					break;
 				case i.data.customID.startsWith('skip'):
 					{
+						await i.deferUpdate();
 						switch (true) {
 							case i.data.customID.endsWith('channel'):
 								await process.set_category(message);
