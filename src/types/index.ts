@@ -52,6 +52,13 @@ declare global {
 		premium_guild_since: string | null;
 	};
 
+	type TicketData = {
+		channel?: string;
+		embed?: { title?: string; description?: string; button?: string };
+		roles?: string[];
+		category?: string;
+	};
+
 	interface String {
 		capitalize(): string;
 	}

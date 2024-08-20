@@ -54,7 +54,7 @@ export default new Event('interactionCreate', async (i) => {
 						emoji: {
 							id: '1244527037008576612'
 						},
-						style: 2
+						style: 3
 					}
 				]
 			}
