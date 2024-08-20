@@ -16,7 +16,7 @@ export default new Event('interactionCreate', async (i) => {
 	console.log('new _private', _private);
 
 	const data = {
-		private: _id.pop() === 'private',
+		private: _private === 'private',
 		id: _id.join('.'),
 		reference: i.message.messageReference?.messageID
 			? await (i.channel as AnyTextableChannel | undefined)?.getMessage(
