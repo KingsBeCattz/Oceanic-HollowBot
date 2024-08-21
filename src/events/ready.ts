@@ -28,7 +28,7 @@ export default new Event('ready', async () => {
 	}
 
 	setInterval(
-		() => client.editStatus('online', util.random.onArray(Activities)),
+		() => client.editStatus('online', util.random.on_array(Activities)),
 		5 * 60000
 	);
 

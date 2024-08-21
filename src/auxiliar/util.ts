@@ -2,6 +2,7 @@ import { cpus } from 'node:os';
 import type { APIEmoji } from 'discord-api-types/v10';
 import type {
 	AnyGuildChannel,
+	ChannelTypes,
 	Client,
 	Guild,
 	MessageActionRow
@@ -55,7 +56,7 @@ export class Util {
 				const random = Math.random() * (max - min) + min;
 				return Number(random.toFixed(decimals));
 			},
-			onArray<T>(array: T[], length = 1): T[] {
+			on_array<T>(array: T[], length = 1): T[] {
 				if (!Array.isArray(array)) return [];
 				const len = typeof length !== 'number' ? 1 : length;
 				const arr: T[] = [];
@@ -258,7 +259,7 @@ export class Util {
 		};
 	}
 
-	public cte(category: string): APIEmoji {
+	public command_type(category: string): APIEmoji {
 		switch (category) {
 			case CommandTypes.Configuration:
 				return {
@@ -293,7 +294,7 @@ export class Util {
 		}
 	}
 
-	public getOpT(type: number) {
+	public get_option_type(type: number) {
 		switch (type) {
 			case 1:
 				return 'Sub Command';
@@ -341,6 +342,51 @@ export class Util {
 
 			default:
 				return '<:Box:1274250845235581031>';
+		}
+	}
+
+	public get_channel_type(type: ChannelTypes) {
+		return (
+			{
+				0: 'Text',
+				2: 'Voice',
+				4: 'Category',
+				5: 'Announcement',
+				10: 'Announcement Thread',
+				11: 'Public Thread',
+				12: 'Private Thread',
+				13: 'Stage Voice',
+				14: 'Directory',
+				15: 'Forum',
+				16: 'Media'
+			}[type] ?? 'Unknown'
+		);
+	}
+
+	public get_channel_emoji(type: ChannelTypes) {
+		switch (type) {
+			case 0:
+				return { id: '1137984506595397662', name: 'Text' };
+			case 2:
+				return { id: '1275890008083005450', name: 'Voice' };
+			case 4:
+				return { id: '1241664474147192843', name: 'Folder' };
+			case 5:
+			case 10:
+				return { id: '1241660567912054854', name: 'Announcement' };
+			case 11:
+			case 12:
+				return { id: '1241664468186959972', name: 'ThreadChannel' };
+			case 13:
+				return { id: '1241664470560931873', name: 'StageChannel' };
+			case 14:
+				return { id: '1275892476711931976', name: 'Discover' };
+			case 15:
+				return { id: '1241664469420085338', name: 'Forum' };
+			case 16:
+				return { id: '1275901355696848977', name: 'Media' };
+			default:
+				return { id: '1274250845235581031', name: 'Box' };
 		}
 	}
 }

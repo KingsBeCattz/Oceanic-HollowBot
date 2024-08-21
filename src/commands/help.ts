@@ -84,7 +84,7 @@ export default new Command(
 											.flatMap((so) =>
 												so.options?.flatMap(
 													(soo) =>
-														`${o.name.capitalize()} ${so.name.capitalize()} ${soo.name.capitalize()} (${ctx.util.getOpT(soo.type)})`
+														`${o.name.capitalize()} ${so.name.capitalize()} ${soo.name.capitalize()} (${ctx.util.get_option_type(soo.type)})`
 												)
 											)
 									)
@@ -110,7 +110,7 @@ export default new Command(
 									.flatMap((o) =>
 										o.options?.flatMap(
 											(so) =>
-												`${o.name.capitalize()} ${so.name.capitalize()} (${ctx.util.getOpT(so.type)})`
+												`${o.name.capitalize()} ${so.name.capitalize()} (${ctx.util.get_option_type(so.type)})`
 										)
 									)
 									.join('\n')
@@ -121,7 +121,9 @@ export default new Command(
 						fields.push({
 							name: '⠇Options',
 							value: command.options
-								.flatMap((o) => `${o.name.capitalize()} (${ctx.util.getOpT(o.type)})`)
+								.flatMap(
+									(o) => `${o.name.capitalize()} (${ctx.util.get_option_type(o.type)})`
+								)
 								.join('\n')
 						});
 				}
@@ -133,7 +135,7 @@ export default new Command(
 						color: ctx.util.random.number(16777215),
 						description: `${command.data.nsfw ? '<:Lewd:1129672128120246292> ' : ''}${command.data.description}`,
 						thumbnail: {
-							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(command.data.type).id}.png`
+							url: `https://cdn.discordapp.com/emojis/${ctx.util.command_type(command.data.type).id}.png`
 						},
 						fields
 					}
@@ -144,7 +146,7 @@ export default new Command(
 		const embed = {
 			title: 'Welcome',
 			color: ctx.util.random.number(16777215),
-			description: `Welcome to the help menu, below in the drop down menu are categories and their commands\n\nIf you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.onArray(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
+			description: `Welcome to the help menu, below in the drop down menu are categories and their commands\n\nIf you have a question about a specific command use \`${ctx.prefix}help [command]\`, like \`${ctx.prefix}help ${ctx.util.random.on_array(ctx.util.commands.map((c) => c.data.name))[0]}\`.`
 		};
 
 		const menu_options = Object.keys(CommandTypes)
@@ -152,7 +154,7 @@ export default new Command(
 			.map((op) => ({
 				label: op,
 				value: op,
-				emoji: ctx.util.cte(op)
+				emoji: ctx.util.command_type(op)
 			}));
 
 		menu_options.unshift({
@@ -298,7 +300,7 @@ export default new Command(
 						description:
 							commands.length === 0 ? 'No commands here, come back later!' : undefined,
 						thumbnail: {
-							url: `https://cdn.discordapp.com/emojis/${ctx.util.cte(i.data.values.raw[0]).id}.png`
+							url: `https://cdn.discordapp.com/emojis/${ctx.util.command_type(i.data.values.raw[0]).id}.png`
 						}
 					}
 				]
