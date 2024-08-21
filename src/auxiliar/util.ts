@@ -1,6 +1,11 @@
 import { cpus } from 'node:os';
 import type { APIEmoji } from 'discord-api-types/v10';
-import type { Client, Guild, MessageActionRow } from 'oceanic.js';
+import type {
+	AnyGuildChannel,
+	Client,
+	Guild,
+	MessageActionRow
+} from 'oceanic.js';
 import { CommandTypes } from 'src/builders/command.builder';
 import { CanvaUtil } from './canva.util';
 import { CommandManager } from './command.manager';
@@ -202,6 +207,22 @@ export class Util {
 				(m) =>
 					m.user.username.toLowerCase().includes(arg.toLowerCase()) ||
 					m.user.globalName?.toLowerCase().includes(arg.toLowerCase())
+			) ??
+			null
+		);
+	}
+
+	public async findChannel(
+		guild: string,
+		arg: string
+	): Promise<AnyGuildChannel | null> {
+		if (!guild || !arg) return null;
+		const id = arg.replace(/[^0-9]/g, '');
+
+		return (
+			this.client.guilds.get(guild)?.channels.get(id) ??
+			(this.client.guilds.get(guild) as Guild).channels.find((c) =>
+				c.name.toLowerCase().includes(arg.toLowerCase())
 			) ??
 			null
 		);
