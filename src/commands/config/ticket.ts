@@ -236,9 +236,9 @@ export default new Command(
 					]
 				});
 			},
-			async end(message: Message) {
+			async end(message: Message, channelID: string) {
 				return await message.edit({
-					content: `Process completed, check <#${ticket_data.channel ?? ctx.data.channelID}>.`,
+					content: `Process completed, check <#${channelID}>.`,
 					components: []
 				});
 			},
@@ -347,9 +347,14 @@ export default new Command(
 								await process.edit_embed(message);
 								break;
 							case i.data.customID.endsWith('embed'):
-								collector.clear(2);
-								await process.end(message);
-								await process.sendEmbed(ticket_data.channel ?? i.channelID);
+								{
+									collector.clear(2);
+									const channelID =
+										(await ctx.db.get<string>('guilds', `${i.guildID}.ticket.channel`)) ??
+										i.channelID;
+									await process.end(message, channelID);
+									await process.sendEmbed(channelID);
+								}
 								break;
 						}
 					}
