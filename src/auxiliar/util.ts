@@ -214,18 +214,23 @@ export class Util {
 
 	public async findChannel(
 		guild: string,
-		arg: string
+		arg: string,
+		threads = true
 	): Promise<AnyGuildChannel | null> {
 		if (!guild || !arg) return null;
 		const id = arg.replace(/[^0-9]/g, '');
 
-		return (
-			this.client.guilds.get(guild)?.channels.get(id) ??
+		return this.client.guilds.get(guild)?.channels.get(id) ??
 			(this.client.guilds.get(guild) as Guild).channels.find((c) =>
 				c.name.toLowerCase().includes(arg.toLowerCase())
 			) ??
-			null
-		);
+			!threads
+			? null
+			: this.client.guilds.get(guild)?.threads.get(id) ??
+					(this.client.guilds.get(guild) as Guild).threads.find((c) =>
+						c.name.toLowerCase().includes(arg.toLowerCase())
+					) ??
+					null;
 	}
 
 	public ping() {
