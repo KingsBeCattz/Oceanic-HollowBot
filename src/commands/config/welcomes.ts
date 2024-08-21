@@ -318,7 +318,6 @@ export default new Command(
 					break;
 				case i.data.customID.startsWith('preview'): {
 					const type = i.data.customID.split('.')[1] as Config;
-					//username, usertag, userid, guild, membercount, ownerid, date
 
 					const replacements = {
 						username: i.user.globalName ?? i.user.username,
@@ -393,7 +392,8 @@ export default new Command(
 									)
 								}
 							}
-						]
+						],
+						content: `-# **This is a preview of __${type}__ embed**`
 					});
 				}
 			}
