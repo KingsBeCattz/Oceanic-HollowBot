@@ -161,11 +161,11 @@ export default new Event('interactionCreate', async (i) => {
 			}
 			break;
 
-		case /^embed.*(welcomes|firewells|bans)$/.test(i.data.customID):
+		case /^embed.*(welcomes|farewells|bans)$/.test(i.data.customID):
 			{
 				const type = i.data.customID.split('.')[1] as
 					| 'welcomes'
-					| 'firewells'
+					| 'farewells'
 					| 'bans';
 
 				for (const textinput of textinputs) {
