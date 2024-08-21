@@ -404,7 +404,7 @@ export default new Command(
 
 					const color: number = /^([A-Fa-f0-9]{6})$/.test(_color ?? '')
 						? Number.parseInt(_color as string, 16)
-						: ctx.util.random.number(16777215);
+						: { welcomes: 8649506, farewells: 4728706, bans: 8649506 }[type];
 
 					await i.deferUpdate();
 					collector.message.edit({
