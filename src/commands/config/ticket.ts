@@ -370,19 +370,15 @@ export default new Command(
 					break;
 				case i.data.customID.startsWith('category.set'):
 					{
-						const category =
-							'values' in i.data
-								? i.data.values.raw[0]
-								: (message.channel as AnyTextableGuildChannel).parentID;
-
-						if (category)
-							ticket_data = (
-								(await ctx.db.set(
-									'guilds',
-									`${ctx.guild?.id}.ticket.category`,
-									category
-								)) as { [k: string]: TicketData }
-							)[ctx.guild?.id ?? ''];
+						ticket_data = (
+							(await ctx.db.set(
+								'guilds',
+								`${ctx.guild?.id}.ticket.category`,
+								'values' in i.data
+									? i.data.values.raw[0]
+									: (message.channel as AnyTextableGuildChannel).parentID ?? ''
+							)) as { [k: string]: TicketData }
+						)[ctx.guild?.id ?? ''];
 						i.deferUpdate();
 						await process.set_roles(message);
 					}

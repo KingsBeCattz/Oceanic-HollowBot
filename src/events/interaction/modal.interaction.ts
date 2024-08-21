@@ -1,4 +1,4 @@
-import { type CategoryChannel, ChannelTypes } from 'oceanic.js';
+import type { AnyGuildChannel, CategoryChannel } from 'oceanic.js';
 import { util, db } from 'src';
 import { Event } from 'src/builders/event.builder';
 
@@ -73,17 +73,15 @@ export default new Event('interactionCreate', async (i) => {
 					`${i.guildID}.ticket.roles`
 				)) ?? []) as string[];
 
-				const category = i.guild?.channels
-					.filter((ch) => ch.type === ChannelTypes.GUILD_CATEGORY)
-					.find(
-						async (ch) =>
-							ch.id ===
-							(await db.get<string>('guilds', `${i.guildID}.ticket.category`))
-					) as CategoryChannel;
+				const category = i.guild?.channels.get(
+					(await db.get<string>('guilds', `${i.guildID}.ticket.category`)) ??
+						(i.channel as AnyGuildChannel).parentID ??
+						''
+				) as CategoryChannel | undefined;
 
-				const tickets_created = category.channels.filter((ch) =>
-					ch.name.startsWith(i.user.username)
-				).length;
+				const tickets_created =
+					i.guild?.channels.filter((ch) => ch.name.startsWith(i.user.username))
+						.length ?? 0;
 
 				const title = `${i.user.username}\'s ticket${tickets_created ? ` (${tickets_created + 1})` : ''}`;
 
@@ -113,7 +111,7 @@ export default new Event('interactionCreate', async (i) => {
 									deny: 0n
 								}
 							),
-						parentID: category.id
+						parentID: category?.id
 					}
 				);
 
