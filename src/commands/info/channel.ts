@@ -109,7 +109,7 @@ export default new Command(
 
 		if ('ownerID' in channel)
 			embed.fields?.push({
-				name: 'Position',
+				name: 'Owner',
 				value: `<@${channel.ownerID}>`,
 				inline: true
 			});
