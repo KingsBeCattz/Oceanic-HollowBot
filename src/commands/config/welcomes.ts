@@ -122,7 +122,7 @@ export default new Command(
 			},
 			show_embed_edit(message: Message, type: Config) {
 				message.edit({
-					content: `Do you want to edit the ${type.slice(0, type.length - 1)} embed?`,
+					content: `Do you want to edit the ${type.slice(0, type.length - 1)} embed?\nBefore editing, note the words that will be replaced, this {keyword} - replacement\n- \`{username}\` - ${ctx.user.globalName ?? ctx.user.username}\n- \`{usertag}\` - ${ctx.user.tag}\n- \`{userid}\` - ${ctx.user.id}\n- \`{guild}\` - ${ctx.guild?.name}\n- \`{membercount}\` - ${ctx.guild?.name}\n- \`{ownerid}\` - ${ctx.guild?.ownerID}- \`{date}\` - <t:${(Date.now() / 1000).toFixed()}>`,
 					components: [
 						{
 							type: 1,
@@ -310,6 +310,79 @@ export default new Command(
 						});
 					}
 					break;
+				case i.data.customID.startsWith('preview'): {
+					const type = i.data.customID.split('.')[1] as Config;
+					//username, usertag, userid, guild, membercount, ownerid, date
+
+					const replacements = {
+						username: i.user.globalName ?? i.user.username,
+						usertag: i.user.tag,
+						userid: i.user.id,
+						guild: i.guild?.name,
+						membercount: i.guild?.memberCount,
+						ownerid: i.guild?.ownerID,
+						date: `<t:${(Date.now() / 1000).toFixed()}>`
+					};
+
+					const def_values = (await ctx.db.get('client', `${type}.embed`)) as {
+						title: string;
+						description: string;
+					};
+
+					const values = (await ctx.db.get(
+						'guilds',
+						`${i.guildID}.${type}.embed`
+					)) as {
+						title?: string;
+						description?: string;
+						image?: string;
+						color?: string;
+					};
+
+					const _color = values.color?.replace(/(#)/g, '');
+
+					const color: number = /^([A-Fa-f0-9]{6})$/.test(_color ?? '')
+						? Number.parseInt(_color as string, 16)
+						: ctx.util.random.number(16777215);
+
+					await i.deferUpdate();
+					collector.message.edit({
+						components: [
+							{
+								type: 1,
+								components: [
+									{
+										type: 2,
+										style: 2,
+										label: 'Go back',
+										customID: 'back',
+										emoji: {
+											id: '1275191799065088133'
+										}
+									}
+								]
+							}
+						],
+						embeds: [
+							{
+								title: (values.title ?? def_values.title).replace(
+									/{(\w+)}/g,
+									(_, key) => replacements[key] ?? `{${key}}`
+								),
+								description: (values.description ?? def_values.description).replace(
+									/{(\w+)}/g,
+									(_, key) => replacements[key] ?? `{${key}}`
+								),
+								color,
+								image: values.image
+									? {
+											url: values.image
+										}
+									: undefined
+							}
+						]
+					});
+				}
 			}
 		});
 
