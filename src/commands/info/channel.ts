@@ -53,14 +53,16 @@ export default new Command(
 			'us-west': 'US West'
 		};
 
+		const hasTopic =
+			channel.type === 2 || channel.type === 13 || !('topic' in channel);
+
 		const embed: Embed = {
 			title: `${channel.type === 4 ? 'Category' : 'Channel'}: ${channel.name}`,
-			description:
-				'topic' in channel
-					? !channel.topic
-						? 'No topic'
-						: channel.topic
-					: 'No topic',
+			description: hasTopic
+				? undefined
+				: !channel.topic
+					? 'No topic'
+					: channel.topic,
 			color: ctx.util.random.number(16777215),
 			thumbnail: {
 				url: `https://cdn.discordapp.com/emojis/${ctx.util.get_channel_emoji(channel.type).id}.png`
@@ -87,25 +89,29 @@ export default new Command(
 		if ('position' in channel)
 			embed.fields?.push({
 				name: 'Position',
-				value: `#${channel.position}`
+				value: `#${channel.position}`,
+				inline: true
 			});
 
 		if ('nsfw' in channel)
 			embed.fields?.push({
 				name: 'NSFW?',
-				value: channel.nsfw ? 'Yes' : 'No'
+				value: channel.nsfw ? 'Yes' : 'No',
+				inline: true
 			});
 
 		if ('rateLimitPerUser' in channel)
 			embed.fields?.push({
 				name: 'Cooldown Per User',
-				value: `${channel.rateLimitPerUser}s`
+				value: `${channel.rateLimitPerUser}s`,
+				inline: true
 			});
 
 		if ('ownerID' in channel)
 			embed.fields?.push({
 				name: 'Position',
-				value: `<@${channel.ownerID}>`
+				value: `<@${channel.ownerID}>`,
+				inline: true
 			});
 
 		if ('threadMetadata' in channel)
@@ -114,24 +120,28 @@ export default new Command(
 					name: 'Archived?',
 					value: channel.threadMetadata.archived
 						? `Yes <t:${(channel.threadMetadata.archiveTimestamp.valueOf() / 1000).toFixed()}>`
-						: 'No'
+						: 'No',
+					inline: true
 				},
 				{
 					name: 'Locked?',
-					value: channel.threadMetadata.locked ? 'Yes' : 'No'
+					value: channel.threadMetadata.locked ? 'Yes' : 'No',
+					inline: true
 				}
 			);
 
 		if ('bitrate' in channel)
 			embed.fields?.push({
 				name: 'Bitrate',
-				value: `${channel.bitrate / 1000}kbps`
+				value: `${channel.bitrate / 1000}kbps`,
+				inline: true
 			});
 
 		if ('userLimit' in channel)
 			embed.fields?.push({
 				name: 'User Limit',
-				value: String(channel.userLimit)
+				value: String(channel.userLimit),
+				inline: true
 			});
 
 		if ('rtcRegion' in channel)
@@ -140,15 +150,18 @@ export default new Command(
 				value: (channel.rtcRegion ?? 'auto').replace(
 					/{(\w+)}/g,
 					(_, key) => regions[key] ?? 'Unknown'
-				)
+				),
+				inline: true
 			});
 
-		embed.fields?.push({
-			name: 'Video Quality',
-			value: ['Auto', '720p'][
-				((channel as VoiceChannel).videoQualityMode ?? 1) - 1
-			]
-		});
+		if (channel.type === 2 || channel.type === 13)
+			embed.fields?.push({
+				name: 'Video Quality',
+				value: ['Auto', '720p'][
+					((channel as VoiceChannel).videoQualityMode ?? 1) - 1
+				],
+				inline: true
+			});
 
 		ctx.send({
 			embeds: [embed],
