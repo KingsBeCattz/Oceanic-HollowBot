@@ -347,6 +347,7 @@ export default new Command(
 								await process.edit_embed(message);
 								break;
 							case i.data.customID.endsWith('embed'):
+								collector.clear(2);
 								await process.end(message);
 								await process.sendEmbed(ticket_data.channel ?? i.channelID);
 								break;
@@ -359,9 +360,7 @@ export default new Command(
 							(await ctx.db.set(
 								'guilds',
 								`${ctx.guild?.id}.ticket.channel`,
-								i.isSelectMenuComponentInteraction()
-									? i.data.values.getChannels(false)[0].id
-									: message.channelID
+								'values' in i.data ? i.data.values.raw[0] : message.channelID
 							)) as { [k: string]: TicketData }
 						)[ctx.guild?.id ?? ''];
 
@@ -371,9 +370,10 @@ export default new Command(
 					break;
 				case i.data.customID.startsWith('category.set'):
 					{
-						const category = i.isSelectMenuComponentInteraction()
-							? i.data.values.getChannels(false)[0].id
-							: (message.channel as AnyTextableGuildChannel).parentID;
+						const category =
+							'values' in i.data
+								? i.data.values.raw[0]
+								: (message.channel as AnyTextableGuildChannel).parentID;
 
 						if (category)
 							ticket_data = (
@@ -457,10 +457,11 @@ export default new Command(
 		});
 
 		collector.on('end', async (code) => {
+			if (code === 2) return;
 			const { content, components } = message;
 
 			message.edit({
-				content: `${content.split('\n')[0]}\n-# ${code === 1 ? 'This process was closed by the author' : 'Time is running out'}`,
+				content: `${content.split('\n')[0]}${['\n-# This process was closed by the author', '\n-# Time is running out', ''][code ?? 0]}`,
 				components: ctx.util.disable_components(components)
 			});
 		});
