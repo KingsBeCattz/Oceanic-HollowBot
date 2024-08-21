@@ -126,7 +126,21 @@ export default new Command(
 			},
 			show_embed_edit(message: Message, type: Config) {
 				message.edit({
-					content: `Do you want to edit the ${type.slice(0, type.length - 1)} embed?\nBefore editing, note the words that will be replaced, this {keyword} - replacement\n- \`{username}\` - ${ctx.user.globalName ?? ctx.user.username}\n- \`{usertag}\` - ${ctx.user.tag}\n- \`{userid}\` - ${ctx.user.id}\n- \`{guild}\` - ${ctx.guild?.name}\n- \`{membercount}\` - ${ctx.guild?.name}\n- \`{ownerid}\` - ${ctx.guild?.ownerID}- \`{date}\` - <t:${(Date.now() / 1000).toFixed()}>`,
+					content:
+						// biome-ignore lint/style/useTemplate: Better readability
+						`Do you want to edit the ${type.slice(0, type.length - 1)} embed?\n` +
+						'## Replacements\n' +
+						`- \`{username}\` - ${ctx.user.globalName ?? ctx.user.username}\n` +
+						`- \`{usertag}\` - ${ctx.user.tag}\n` +
+						`- \`{userid}\` - ${ctx.user.id}\n` +
+						`- \`{guild}\` - ${ctx.guild?.name}\n` +
+						`- \`{membercount}\` - ${ctx.guild?.memberCount}\n` +
+						`- \`{ownerid}\` - ${ctx.guild?.ownerID}\n` +
+						`- \`{date}\` - <t:${(Date.now() / 1000).toFixed()}>\n` +
+						'- `{reason}` - "Reason for ban" *\n' +
+						'## Notes\n' +
+						'- You can place in image a gif or any **image** format, not videos or any other file.\n' +
+						'- In case of bans the replacement of `{reason}` applies. *',
 					components: [
 						{
 							type: 1,
@@ -305,7 +319,7 @@ export default new Command(
 											type: 4,
 											customID: 'embed.image',
 											style: 1,
-											label: 'Image',
+											label: 'Image (E.g. https://example.com/image.png)',
 											required: false,
 											value: previously_set.image
 										}
