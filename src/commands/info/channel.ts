@@ -149,5 +149,23 @@ export default new Command(
 				((channel as VoiceChannel).videoQualityMode ?? 1) - 1
 			]
 		});
+
+		ctx.send({
+			embeds: [embed],
+			components: [
+				{
+					type: 1,
+					components: [
+						{
+							type: 2,
+							style: 5,
+							label: 'Go to channel',
+							emoji: ctx.util.get_channel_emoji(channel.type),
+							url: `https://discord.com/channels/${channel.guildID}/${channel.id}`
+						}
+					]
+				}
+			]
+		});
 	}
 );
