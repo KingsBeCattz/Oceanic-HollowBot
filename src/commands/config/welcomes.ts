@@ -140,7 +140,8 @@ export default new Command(
 						'- `{reason}` - "Reason for ban" *\n' +
 						'## Notes\n' +
 						'- You can place in image a gif or any **image** format, not videos or any other file.\n' +
-						'- In case of bans the replacement of `{reason}` applies. *',
+						'- In case of bans the replacement of `{reason}` applies. *\n' +
+						'- Feel free to use [Escape sequences](https://cdn.discordapp.com/attachments/1243105342687150121/1275638305509343254/NlISBMlvQUnURnfT.png) if you wish.',
 					components: [
 						{
 							type: 1,
@@ -353,9 +354,22 @@ export default new Command(
 						userid: i.user.id,
 						guild: i.guild?.name,
 						membercount: i.guild?.memberCount,
-						ownerid: i.guild?.ownerID,
+						ownerid: i.guild?.ownerID ?? null,
 						date: `<t:${(Date.now() / 1000).toFixed()}>`
+					} as {
+						username: string;
+						usertag: string;
+						userid: string;
+						guild: string;
+						membercount: number;
+						ownerid: string | null;
+						date: string;
+						reason?: string;
 					};
+
+					if (type === 'bans') {
+						replacements.reason = 'Killing an innocent grub';
+					}
 
 					const def_values = (await ctx.db.get('client', `${type}.embed`)) as {
 						title: string;
