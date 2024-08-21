@@ -31,7 +31,7 @@ export default new Command(
 							customID: 'welcomes',
 							label: 'Welcomes',
 							emoji: {
-								id: '1275540608395640862'
+								id: '1129498663606030416'
 							}
 						},
 						{
@@ -40,7 +40,7 @@ export default new Command(
 							customID: 'farewells',
 							label: 'Farewells',
 							emoji: {
-								id: '1275540650380492820'
+								id: '1129498660670029894'
 							}
 						},
 						{
@@ -63,7 +63,8 @@ export default new Command(
 						}
 					]
 				}
-			]
+			],
+			embeds: []
 		};
 
 		const collector = new InteractionCollector(
@@ -119,7 +120,8 @@ export default new Command(
 								}
 							]
 						}
-					]
+					],
+					embeds: []
 				});
 			},
 			show_embed_edit(message: Message, type: Config) {
@@ -149,7 +151,8 @@ export default new Command(
 								}
 							]
 						}
-					]
+					],
+					embeds: []
 				});
 			},
 			show_end_set(message: Message, type: Config) {
@@ -188,7 +191,8 @@ export default new Command(
 								}
 							]
 						}
-					]
+					],
+					embeds: []
 				});
 			}
 		};
