@@ -254,6 +254,16 @@ export default new Command(
 					{
 						const type = i.data.customID.split('.')[1] as Config;
 
+						const previously_set = ((await ctx.db.get(
+							'guilds',
+							`${i.guildID}.${type}.embed`
+						)) ?? {}) as {
+							title?: string;
+							description?: string;
+							image?: string;
+							color?: string;
+						};
+
 						await i.createModal({
 							customID: `embed.${type}`,
 							title: `Editing ${type.slice(0, type.length - 1).capitalize()} embed`,
@@ -268,7 +278,8 @@ export default new Command(
 											label: 'Title',
 											maxLength: 256,
 											minLength: 1,
-											required: false
+											required: false,
+											value: previously_set.title
 										}
 									]
 								},
@@ -282,7 +293,8 @@ export default new Command(
 											label: 'Description',
 											maxLength: 4000,
 											minLength: 1,
-											required: false
+											required: false,
+											value: previously_set.description
 										}
 									]
 								},
@@ -294,7 +306,8 @@ export default new Command(
 											customID: 'embed.image',
 											style: 1,
 											label: 'Image',
-											required: false
+											required: false,
+											value: previously_set.image
 										}
 									]
 								},
@@ -308,7 +321,8 @@ export default new Command(
 											label: 'Color (Hex)',
 											required: false,
 											minLength: 6,
-											maxLength: 7
+											maxLength: 7,
+											value: previously_set.color
 										}
 									]
 								}
