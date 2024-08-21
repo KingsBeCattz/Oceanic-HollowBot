@@ -346,6 +346,7 @@ export default new Command(
 					const def_values = (await ctx.db.get('client', `${type}.embed`)) as {
 						title: string;
 						description: string;
+						image: string;
 					};
 
 					const values = ((await ctx.db.get(
@@ -393,11 +394,13 @@ export default new Command(
 									(_, key) => replacements[key] ?? `{${key}}`
 								),
 								color,
-								image: values.image
-									? {
-											url: values.image
-										}
-									: undefined,
+								image: {
+									url: /^https?:\/\/.*\.(jpg|jpeg|png|gif|webp)$/i.test(
+										values.image ?? ''
+									)
+										? (values.image as string)
+										: def_values.image
+								},
 								thumbnail: {
 									url: i.client.util.formatImage(
 										i.user.avatar
