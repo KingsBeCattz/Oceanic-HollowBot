@@ -384,7 +384,14 @@ export default new Command(
 									? {
 											url: values.image
 										}
-									: undefined
+									: undefined,
+								thumbnail: {
+									url: i.client.util.formatImage(
+										i.user.avatar
+											? `/avatars/${i.user.id}/${i.user.avatar}`
+											: `/embed/avatars/${Number(i.user.discriminator) === 0 ? (Number(i.user.id) >> 22) % 6 : Number(i.user.discriminator) % 5}`
+									)
+								}
 							}
 						]
 					});
