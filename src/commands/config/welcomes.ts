@@ -212,7 +212,7 @@ export default new Command(
 			if (!i.isButtonComponentInteraction()) return;
 
 			switch (true) {
-				case i.data.customID === 'cancel':
+				case i.data.customID === 'close':
 					{
 						await i.deferUpdate();
 
