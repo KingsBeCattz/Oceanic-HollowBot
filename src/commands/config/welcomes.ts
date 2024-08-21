@@ -1,6 +1,8 @@
-import type { Message } from 'oceanic.js';
-import { ComponentTypes } from 'oceanic.js/dist/lib/Constants';
-import type { CreateMessageOptions } from 'oceanic.js/dist/lib/types/channels';
+import {
+	ComponentTypes,
+	type CreateMessageOptions,
+	type Message
+} from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
