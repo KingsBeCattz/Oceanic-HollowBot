@@ -220,17 +220,20 @@ export class Util {
 		if (!guild || !arg) return null;
 		const id = arg.replace(/[^0-9]/g, '');
 
-		return this.client.guilds.get(guild)?.channels.get(id) ??
-			(this.client.guilds.get(guild) as Guild).channels.find((c) =>
+		let channel =
+			this.client.guilds.get(guild)?.channels.get(id) ??
+			((this.client.guilds.get(guild) as Guild).channels.find((c) =>
 				c.name.toLowerCase().includes(arg.toLowerCase())
-			) ??
-			!threads
-			? null
-			: this.client.guilds.get(guild)?.threads.get(id) ??
-					(this.client.guilds.get(guild) as Guild).threads.find((c) =>
-						c.name.toLowerCase().includes(arg.toLowerCase())
-					) ??
-					null;
+			) as AnyGuildChannel | undefined | null);
+
+		channel ||= threads
+			? this.client.guilds.get(guild)?.threads.get(id) ??
+				(this.client.guilds.get(guild) as Guild).threads.find((c) =>
+					c.name.toLowerCase().includes(arg.toLowerCase())
+				)
+			: null;
+
+		return channel ?? null;
 	}
 
 	public ping() {
