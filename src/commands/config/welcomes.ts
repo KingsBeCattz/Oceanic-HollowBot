@@ -331,10 +331,10 @@ export default new Command(
 						description: string;
 					};
 
-					const values = (await ctx.db.get(
+					const values = ((await ctx.db.get(
 						'guilds',
 						`${i.guildID}.${type}.embed`
-					)) as {
+					)) ?? {}) as {
 						title?: string;
 						description?: string;
 						image?: string;
