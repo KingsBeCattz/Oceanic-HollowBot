@@ -1,7 +1,8 @@
 import {
 	ComponentTypes,
 	type CreateMessageOptions,
-	type Message
+	type Message,
+	type MessageComponent
 } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
@@ -74,7 +75,48 @@ export default new Command(
 		);
 
 		const process = {
-			show_set(message: Message, type: Config) {
+			async show_set(message: Message, type: Config) {
+				const components: MessageComponent[] = [
+					{
+						type: 2,
+						style: 2,
+						label: 'Go back',
+						customID: 'back',
+						emoji: {
+							id: '1275191799065088133'
+						}
+					},
+					{
+						type: 2,
+						customID: `set.${type}.here`,
+						style: 2,
+						label: 'This channel',
+						emoji: {
+							id: '1137984506595397662'
+						}
+					},
+					{
+						type: 2,
+						style: 4,
+						label: 'Close',
+						customID: 'close',
+						emoji: {
+							id: '1274894945655717943'
+						}
+					}
+				];
+
+				if (await ctx.db.exists('guilds', `${ctx.guild?.id}.${type}.channel`))
+					components.splice(1, 0, {
+						type: 2,
+						style: 2,
+						label: 'Skip',
+						customID: 'skip',
+						emoji: {
+							id: '1275191659969384489'
+						}
+					});
+
 				return message.edit({
 					content: `Editing: ${type.capitalize()}, select the channel to use`,
 					components: [
@@ -90,35 +132,7 @@ export default new Command(
 						},
 						{
 							type: 1,
-							components: [
-								{
-									type: 2,
-									style: 2,
-									label: 'Go back',
-									customID: 'back',
-									emoji: {
-										id: '1275191799065088133'
-									}
-								},
-								{
-									type: 2,
-									customID: `set.${type}.here`,
-									style: 2,
-									label: 'This channel',
-									emoji: {
-										id: '1137984506595397662'
-									}
-								},
-								{
-									type: 2,
-									style: 4,
-									label: 'Close',
-									customID: 'close',
-									emoji: {
-										id: '1274894945655717943'
-									}
-								}
-							]
+							components
 						}
 					],
 					embeds: []
@@ -140,8 +154,7 @@ export default new Command(
 						'- `{reason}` - "Reason for ban" *\n' +
 						'## Notes\n' +
 						'- You can place in image a gif or any **image** format, not videos or any other file.\n' +
-						'- In case of bans the replacement of `{reason}` applies. *\n' +
-						'- Feel free to use [Escape sequences](https://cdn.discordapp.com/attachments/1243105342687150121/1275638305509343254/NlISBMlvQUnURnfT.png) if you wish.',
+						'- In case of bans the replacement of `{reason}` applies. *\n',
 					components: [
 						{
 							type: 1,
