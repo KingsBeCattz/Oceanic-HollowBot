@@ -178,46 +178,46 @@ export default new Event('interactionCreate', async (i) => {
 						`${i.guildID}.${type}.${textinput.customID}`,
 						textinput.value
 					);
-
-					await i.deferUpdate();
-					i.editOriginal({
-						content: 'The configuration has been done successfully!',
-						components: [
-							{
-								type: 1,
-								components: [
-									{
-										type: 2,
-										style: 2,
-										label: 'Go back',
-										customID: 'back',
-										emoji: {
-											id: '1275191799065088133'
-										}
-									},
-									{
-										type: 2,
-										style: 2,
-										label: 'Preview',
-										customID: `preview.${type}`,
-										emoji: {
-											id: '1129498662272245800'
-										}
-									},
-									{
-										type: 2,
-										style: 4,
-										label: 'Close',
-										customID: 'close',
-										emoji: {
-											id: '1274894945655717943'
-										}
-									}
-								]
-							}
-						]
-					});
 				}
+
+				await i.deferUpdate();
+				i.editOriginal({
+					content: 'The configuration has been done successfully!',
+					components: [
+						{
+							type: 1,
+							components: [
+								{
+									type: 2,
+									style: 2,
+									label: 'Go back',
+									customID: 'back',
+									emoji: {
+										id: '1275191799065088133'
+									}
+								},
+								{
+									type: 2,
+									style: 2,
+									label: 'Preview',
+									customID: `preview.${type}`,
+									emoji: {
+										id: '1129498662272245800'
+									}
+								},
+								{
+									type: 2,
+									style: 4,
+									label: 'Close',
+									customID: 'close',
+									emoji: {
+										id: '1274894945655717943'
+									}
+								}
+							]
+						}
+					]
+				});
 			}
 			break;
 	}
