@@ -6,16 +6,14 @@ import {
 } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'channel',
 		description: 'Get all about a channel!',
 		nsfw: false,
 		type: CommandTypes.Information
 	},
-	[],
-	[],
-	[
+	options: [
 		{
 			type: 7,
 			name: 'channel',
@@ -23,7 +21,7 @@ export default new Command(
 			required: false
 		}
 	],
-	async (ctx) => {
+	code: async (ctx) => {
 		const channel =
 			(await ctx.util.findChannel(
 				ctx.guild?.id ?? '',
@@ -181,4 +179,4 @@ export default new Command(
 			]
 		});
 	}
-);
+});

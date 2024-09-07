@@ -1,15 +1,13 @@
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'prefix',
 		description: 'Set, Get or Reset the prefix',
 		type: CommandTypes.Configuration,
 		nsfw: false
 	},
-	[],
-	[],
-	[
+	options: [
 		{
 			type: 1,
 			name: 'get',
@@ -34,7 +32,7 @@ export default new Command(
 			description: 'Reset the prefix (Requires Manage Guild permission)'
 		}
 	],
-	async (ctx) => {
+	code: async (ctx) => {
 		const action = ctx.getsub(ctx.args?.shift() || 'get')?.toLowerCase();
 
 		const check_permission = () =>
@@ -94,4 +92,4 @@ export default new Command(
 				});
 		}
 	}
-);
+});

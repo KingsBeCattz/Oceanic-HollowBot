@@ -7,17 +7,14 @@ import type {
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'ticket',
 		description: 'Setup the ticket system (Requires Manage Guild permission)',
 		nsfw: false,
 		type: CommandTypes.Configuration
 	},
-	[],
-	[],
-	[],
-	async (ctx) => {
+	code: async (ctx) => {
 		if (!ctx.member?.permissions.has(32n))
 			return ctx.send({
 				content:
@@ -52,16 +49,16 @@ export default new Command(
 						components: (
 							(ticket_data.channel
 								? [
-										{
-											type: 2,
-											style: 2,
-											label: 'Skip',
-											customID: 'skip.channel',
-											emoji: {
-												id: '1275191659969384489'
-											}
+									{
+										type: 2,
+										style: 2,
+										label: 'Skip',
+										customID: 'skip.channel',
+										emoji: {
+											id: '1275191659969384489'
 										}
-									]
+									}
+								]
 								: []) as MessageComponent[]
 						).concat([
 							{
@@ -162,16 +159,16 @@ export default new Command(
 							components: (
 								(ticket_data.category
 									? [
-											{
-												type: 2,
-												style: 2,
-												label: 'Skip',
-												customID: 'skip.category',
-												emoji: {
-													id: '1275191659969384489'
-												}
+										{
+											type: 2,
+											style: 2,
+											label: 'Skip',
+											customID: 'skip.category',
+											emoji: {
+												id: '1275191659969384489'
 											}
-										]
+										}
+									]
 									: []) as MessageComponent[]
 							).concat([
 								{
@@ -278,29 +275,29 @@ export default new Command(
 		};
 		const message = await (ticket_data.channel
 			? ctx.send({
-					content: `The ticket system is already configured, do you want to resend the button or reconfigure it?\n-# This interaction will close <t:${time}:R>`,
-					components: [
-						{
-							type: 1,
-							components: [
-								{
-									type: 2,
-									style: 2,
-									label: 'Resend',
-									customID: 'resend',
-									emoji: { id: '1275306176615284777' }
-								},
-								{
-									type: 2,
-									style: 2,
-									label: 'Reconfigure',
-									customID: 'reconfigure',
-									emoji: { id: '1129677836421189662' }
-								}
-							]
-						}
-					]
-				})
+				content: `The ticket system is already configured, do you want to resend the button or reconfigure it?\n-# This interaction will close <t:${time}:R>`,
+				components: [
+					{
+						type: 1,
+						components: [
+							{
+								type: 2,
+								style: 2,
+								label: 'Resend',
+								customID: 'resend',
+								emoji: { id: '1275306176615284777' }
+							},
+							{
+								type: 2,
+								style: 2,
+								label: 'Reconfigure',
+								customID: 'reconfigure',
+								emoji: { id: '1129677836421189662' }
+							}
+						]
+					}
+				]
+			})
 			: ctx.send(process.start_options));
 
 		const current_roles = ticket_data.roles ?? [];
@@ -366,7 +363,7 @@ export default new Command(
 								'guilds',
 								`${ctx.guild?.id}.ticket.channel`,
 								'values' in i.data ? i.data.values.raw[0] : message.channelID
-							)) as { [k: string]: TicketData }
+							)) as { [k: string]: TicketData; }
 						)[ctx.guild?.id ?? ''];
 
 						i.deferUpdate();
@@ -382,7 +379,7 @@ export default new Command(
 								'values' in i.data
 									? i.data.values.raw[0]
 									: (message.channel as AnyTextableGuildChannel).parentID ?? ''
-							)) as { [k: string]: TicketData }
+							)) as { [k: string]: TicketData; }
 						)[ctx.guild?.id ?? ''];
 						i.deferUpdate();
 						await process.set_roles(message);
@@ -395,7 +392,7 @@ export default new Command(
 								(await ctx.db.set('guilds', `${message.guildID}.ticket.roles`, [
 									...i.data.values.raw.filter((rid) => !current_roles.includes(rid)),
 									...current_roles.filter((rid) => !i.data.values.raw.includes(rid))
-								])) as { [k: string]: TicketData }
+								])) as { [k: string]: TicketData; }
 							)[ctx.guild?.id ?? ''];
 							await i.deferUpdate();
 							await process.edit_embed(message);
@@ -467,4 +464,4 @@ export default new Command(
 			});
 		});
 	}
-);
+});

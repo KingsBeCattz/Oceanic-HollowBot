@@ -1,16 +1,14 @@
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'reload',
 		description: 'Reloads commands',
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
-	['developer'],
-	[],
-	[],
-	async (ctx) => {
+	permissions: ['developer'],
+	code: async (ctx) => {
 		const time = Date.now();
 
 		await ctx.util.commands.load('/src/commands/');
@@ -27,4 +25,4 @@ export default new Command(
 			content: `# All commands reloaded\n[**${commands_delay}ms**] Commands: ${ctx.util.commands.size}\n[**${slashes_delay}ms**] Slashes: ${slashes.length}`
 		});
 	}
-);
+});

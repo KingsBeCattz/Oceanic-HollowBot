@@ -3,17 +3,14 @@ import { VERSION } from 'oceanic.js';
 import packagejson from 'package.json';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'client',
 		description: 'Get all about me',
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
-	[],
-	[],
-	[],
-	async (ctx) => {
+	code: async (ctx) => {
 		const bot = await ctx.profile(ctx.client.user.id);
 		const owner = await ctx.util.findUser('1125490330679115847');
 
@@ -97,4 +94,4 @@ export default new Command(
 			]
 		});
 	}
-);
+});

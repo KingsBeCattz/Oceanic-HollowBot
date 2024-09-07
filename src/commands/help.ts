@@ -2,16 +2,14 @@ import type { APIEmbedField } from 'discord-api-types/v10';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'help',
 		description: 'Do you need some help about me?',
 		nsfw: false,
 		type: CommandTypes.Generic
 	},
-	[],
-	[],
-	[
+	options: [
 		{
 			type: 3,
 			name: 'command',
@@ -19,7 +17,7 @@ export default new Command(
 			required: false
 		}
 	],
-	async (ctx) => {
+	code: async (ctx) => {
 		const command = ctx.util.command(ctx.get('command', ctx.args?.shift()));
 
 		if (command) {
@@ -289,14 +287,14 @@ export default new Command(
 							commands.length === 0 || commands.some((c) => c === undefined)
 								? undefined
 								: (
-										commands as {
-											name: string;
-											value: string;
-											inline: boolean;
-										}[]
-									).sort((a, b) =>
-										a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-									),
+									commands as {
+										name: string;
+										value: string;
+										inline: boolean;
+									}[]
+								).sort((a, b) =>
+									a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+								),
 						description:
 							commands.length === 0 ? 'No commands here, come back later!' : undefined,
 						thumbnail: {
@@ -316,4 +314,4 @@ export default new Command(
 			});
 		});
 	}
-);
+});

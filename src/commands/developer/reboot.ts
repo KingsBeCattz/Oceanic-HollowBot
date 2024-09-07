@@ -1,16 +1,14 @@
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'reboot',
 		description: 'Restart the whole bot process',
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
-	['developer'],
-	[],
-	[],
-	async (ctx) => {
+	permissions: ['developer'],
+	code: async (ctx) => {
 		await ctx.send({
 			content:
 				'Restarting...\n-# When I start back I will send notice on this same channel.'
@@ -29,4 +27,4 @@ export default new Command(
 
 		process.exit(0);
 	}
-);
+});

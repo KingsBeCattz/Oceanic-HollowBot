@@ -1,16 +1,14 @@
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'pull',
 		description: 'I download the code available on github',
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
-	['developer'],
-	[],
-	[],
-	async (ctx) => {
+	permissions: ['developer'],
+	code: async (ctx) => {
 		const message = ctx.send({
 			content: 'Updating...'
 		});
@@ -21,4 +19,4 @@ export default new Command(
 			content: `\`\`\`sh\n${output}\n\`\`\``
 		});
 	}
-);
+});

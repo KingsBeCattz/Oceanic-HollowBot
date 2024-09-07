@@ -2,17 +2,15 @@ import { profileImage } from 'discord-arts';
 import type { Guild, Member, User } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'user',
 		alias: ['userinfo'],
 		description: 'Get all about a user!',
 		nsfw: false,
 		type: CommandTypes.Information
 	},
-	[],
-	[],
-	[
+	options: [
 		{
 			type: 6,
 			name: 'user',
@@ -20,7 +18,7 @@ export default new Command(
 			required: false
 		}
 	],
-	async (ctx) => {
+	code: async (ctx) => {
 		const member =
 			(await ctx.util.findMember(
 				(ctx.guild as Guild).id,
@@ -91,4 +89,4 @@ export default new Command(
 			]
 		});
 	}
-);
+});

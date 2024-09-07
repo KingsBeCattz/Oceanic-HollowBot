@@ -9,21 +9,15 @@ const transpiler = new Transpiler({
 	loader: 'ts'
 });
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'eval',
 		description: 'Evaluate a TS/JS code',
 		type: CommandTypes.Developer,
 		nsfw: false
 	},
-	['developer'],
-	[
-		async (ctx) =>
-			(
-				(await ctx.db.get('users', `${ctx.user.id}.permissions`)) as string[]
-			)?.includes('developer') ?? false
-	],
-	[
+	permissions: ['developer'],
+	options: [
 		{
 			type: 3,
 			name: 'code',
@@ -31,7 +25,7 @@ export default new Command(
 			required: true
 		}
 	],
-	async (ctx) => {
+	code: async (ctx) => {
 		const time = Date.now();
 		let eval_: string;
 		let type:
@@ -162,4 +156,4 @@ export default new Command(
 			true
 		);
 	}
-);
+});

@@ -9,17 +9,14 @@ import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
 type Config = 'welcomes' | 'farewells' | 'bans';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'welcomes',
 		description: 'Setup the welcomes system (Requires Manage Guild permission)',
 		nsfw: false,
 		type: CommandTypes.Configuration
 	},
-	[],
-	[],
-	[],
-	async (ctx) => {
+	code: async (ctx) => {
 		const initial: CreateMessageOptions = {
 			content: 'What do you want to configure?',
 			components: [
@@ -463,4 +460,4 @@ export default new Command(
 			});
 		});
 	}
-);
+});

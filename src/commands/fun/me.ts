@@ -1,16 +1,14 @@
 import { CommandInteraction, Message } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
-export default new Command(
-	{
+export default new Command({
+	data: {
 		name: 'me',
 		description: 'Say something about yourself, anonymously or publicly',
 		type: CommandTypes.Fun,
 		nsfw: false
 	},
-	[],
-	[],
-	[
+	options: [
 		{
 			type: 5,
 			name: 'anonym',
@@ -24,7 +22,7 @@ export default new Command(
 			required: true
 		}
 	],
-	async (ctx) => {
+	code: async (ctx) => {
 		let _anonym = String(ctx.get('anonym', ctx.args?.shift()));
 
 		if (!_anonym) {
@@ -60,4 +58,4 @@ export default new Command(
 			content: `${message}\n- *${anonym ? 'A user' : ctx.user.globalName}*`
 		});
 	}
-);
+});
