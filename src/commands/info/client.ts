@@ -1,5 +1,5 @@
 import { profileImage } from 'discord-arts';
-import { VERSION } from 'oceanic.js';
+import { Message, VERSION } from 'oceanic.js';
 import packagejson from 'package.json';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
@@ -11,6 +11,8 @@ export default new Command({
 		nsfw: false
 	},
 	code: async (ctx) => {
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
+
 		const bot = await ctx.profile(ctx.client.user.id);
 		const owner = await ctx.util.findUser('1125490330679115847');
 

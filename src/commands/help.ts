@@ -1,4 +1,5 @@
 import type { APIEmbedField } from 'discord-api-types/v10';
+import { Message } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 import { InteractionCollector } from 'src/collectors/InteractionCollector';
 
@@ -19,6 +20,8 @@ export default new Command({
 	],
 	code: async (ctx) => {
 		const command = ctx.util.command(ctx.get('command', ctx.args?.shift()));
+
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
 
 		if (command) {
 			const fields: APIEmbedField[] = [

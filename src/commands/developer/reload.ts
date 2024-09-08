@@ -1,3 +1,4 @@
+import { Message } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command({
@@ -9,6 +10,7 @@ export default new Command({
 	},
 	permissions: ['developer'],
 	code: async (ctx) => {
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
 		const time = Date.now();
 
 		await ctx.util.commands.load('/src/commands/');

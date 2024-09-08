@@ -22,6 +22,7 @@ export default new Command({
 		}
 	],
 	code: async (ctx) => {
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
 		const channel =
 			(await ctx.util.findChannel(
 				ctx.guild?.id ?? '',

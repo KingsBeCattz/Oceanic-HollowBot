@@ -69,10 +69,10 @@ export class Context {
 				'messageReference',
 				reply
 					? {
-							channelID: this.channel?.id,
-							guildID: this.guild?.id,
-							messageID: this.data.id
-						}
+						channelID: this.channel?.id,
+						guildID: this.guild?.id,
+						messageID: this.data.id
+					}
 					: {}
 			);
 
@@ -82,8 +82,6 @@ export class Context {
 				data
 			);
 		}
-
-		this.data.defer(data.flags);
 
 		return (await this.data.createFollowup(data)).message;
 	}

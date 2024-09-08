@@ -26,6 +26,7 @@ export default new Command({
 		let _anonym = String(ctx.get('anonym', ctx.args?.shift()));
 
 		if (!_anonym) {
+			if (!(ctx.data instanceof Message)) await ctx.data.defer(64);
 			ctx.send({
 				content: 'You must give an message!'
 			});
@@ -48,11 +49,12 @@ export default new Command({
 
 		if (ctx.data instanceof Message && anonym) ctx.data.delete();
 
-		if (ctx.data instanceof CommandInteraction)
+		if (ctx.data instanceof CommandInteraction) {
+			await ctx.data.defer(64);
 			ctx.send({
-				content: 'I just sent your message!',
-				flags: 64
+				content: 'I just sent your message!'
 			});
+		}
 
 		ctx.client.rest.channels.createMessage(ctx.channel?.id ?? ctx.user.id, {
 			content: `${message}\n- *${anonym ? 'A user' : ctx.user.globalName}*`

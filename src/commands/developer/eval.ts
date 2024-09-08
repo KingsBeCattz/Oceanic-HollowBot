@@ -1,5 +1,6 @@
 import { inspect } from 'node:util';
 import { Transpiler } from 'bun';
+import { Message } from 'oceanic.js';
 import type { ButtonComponent, TextButton } from 'oceanic.js/dist/lib/types';
 import { create } from 'sourcebin';
 import { Command, CommandTypes } from 'src/builders/command.builder';
@@ -26,6 +27,11 @@ export default new Command({
 		}
 	],
 	code: async (ctx) => {
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
+		const message = await ctx.send({
+			content: "# EVALUATING..."
+		}, true);
+
 		const time = Date.now();
 		let eval_: string;
 		let type:
@@ -53,7 +59,7 @@ export default new Command({
 		let output: string;
 
 		try {
-			// biome-ignore lint/security/noGlobalEval: The use is protected by conditionals
+			// biome-ignore lint/security/noGlobalEval: The use is protected by bot permissions
 			eval_ = await eval(
 				(flag ?? '--sync') === '--async'
 					? `(async () => {
@@ -143,7 +149,7 @@ export default new Command({
 			disabled: false
 		});
 
-		await ctx.send(
+		message.edit(
 			{
 				content: output,
 				components: [
@@ -152,8 +158,7 @@ export default new Command({
 						components
 					}
 				]
-			},
-			true
+			}
 		);
 	}
 });

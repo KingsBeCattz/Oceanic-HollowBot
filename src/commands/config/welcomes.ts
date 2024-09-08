@@ -1,7 +1,7 @@
 import {
 	ComponentTypes,
 	type CreateMessageOptions,
-	type Message,
+	Message,
 	type MessageComponent
 } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
@@ -17,6 +17,7 @@ export default new Command({
 		type: CommandTypes.Configuration
 	},
 	code: async (ctx) => {
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
 		const initial: CreateMessageOptions = {
 			content: 'What do you want to configure?',
 			components: [

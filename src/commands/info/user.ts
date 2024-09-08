@@ -1,5 +1,5 @@
 import { profileImage } from 'discord-arts';
-import type { Guild, Member, User } from 'oceanic.js';
+import { type Guild, type Member, Message, type User } from 'oceanic.js';
 import { Command, CommandTypes } from 'src/builders/command.builder';
 
 export default new Command({
@@ -19,6 +19,7 @@ export default new Command({
 		}
 	],
 	code: async (ctx) => {
+		if (!(ctx.data instanceof Message)) await ctx.data.defer();
 		const member =
 			(await ctx.util.findMember(
 				(ctx.guild as Guild).id,
