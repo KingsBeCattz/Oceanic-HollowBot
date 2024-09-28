@@ -23,7 +23,7 @@ export class Context {
 		public util: Util,
 		public command: Command,
 		public db: typeof Database,
-		public args?: string[]
+		public args: string[] = []
 	) {
 		this.guild = data.guild;
 	}
@@ -57,6 +57,11 @@ export class Context {
 				`${this.guild?.id}.prefix`
 			) || process.env.PREFIX
 		);
+	}
+
+	public async defer(flags?: number) {
+		if (this.data instanceof Message) return;
+		await this.data.defer(flags);
 	}
 
 	public async send(

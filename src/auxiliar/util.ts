@@ -157,7 +157,7 @@ export class Util {
 				path: `/applications/${this.client.user.id}/emojis`,
 				method: 'GET',
 				auth: true
-			})) as { items: APIEmoji[] }
+			})) as { items: APIEmoji[]; }
 		).items;
 	}
 
@@ -229,9 +229,9 @@ export class Util {
 
 		channel ||= threads
 			? this.client.guilds.get(guild)?.threads.get(id) ??
-				(this.client.guilds.get(guild) as Guild).threads.find((c) =>
-					c.name.toLowerCase().includes(arg.toLowerCase())
-				)
+			(this.client.guilds.get(guild) as Guild).threads.find((c) =>
+				c.name.toLowerCase().includes(arg.toLowerCase())
+			)
 			: null;
 
 		return channel ?? null;
